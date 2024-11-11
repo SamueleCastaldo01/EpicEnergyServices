@@ -18,7 +18,7 @@ public class FileUploadService {
     public String uploadFile(MultipartFile file, Long userId) throws IOException {
         try {
             Map<String, Object> uploadParams = ObjectUtils.asMap(
-                    "folder", "users/" + userId + "/profile_pictures", // Modifica se necessario
+                    "folder", "users/" + userId + "/profile_pictures",
                     "overwrite", true,
                     "resource_type", "auto"
             );

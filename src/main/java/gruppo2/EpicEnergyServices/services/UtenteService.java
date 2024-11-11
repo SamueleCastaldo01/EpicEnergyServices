@@ -1,5 +1,7 @@
 package gruppo2.EpicEnergyServices.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import gruppo2.EpicEnergyServices.entities.Utente;
 import gruppo2.EpicEnergyServices.exceptions.BadRequestException;
 import gruppo2.EpicEnergyServices.exceptions.NotFoundException;
@@ -8,7 +10,9 @@ import gruppo2.EpicEnergyServices.repositories.UtenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -19,6 +23,10 @@ public class UtenteService {
     @Autowired
     private PasswordEncoder bcrypt;
 
+    // Aggiunge l'iniezione del bean Cloudinary
+    @Autowired
+    private Cloudinary cloudinary;
+
     public Utente findById(long id) {
         return this.utenteRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
@@ -27,20 +35,16 @@ public class UtenteService {
         return this.utenteRepository.findByEmail(email).orElseThrow(() -> new NotFoundException("L'utente con email " + email + " non è stato trovato"));
     }
 
-    //GET -------------------------------------
     public List<Utente> findAll() {
         return this.utenteRepository.findAll();
     }
 
-    //POST -------------------------------------
     public Utente save(NewUtenteDTO body) {
-        // Controllo se ci sta già un altro con la stessa email
         this.utenteRepository.findByEmail(body.email()).ifPresent(
                 user -> {
                     throw new BadRequestException("Email " + body.email() + " già in uso!");
                 }
         );
-        // Controllo anche dell'username, deve essere univoco
         this.utenteRepository.findByUsername(body.username()).ifPresent(
                 user -> {
                     throw new BadRequestException("Username " + body.username() + " è già in uso!");
@@ -50,12 +54,10 @@ public class UtenteService {
         return this.utenteRepository.save(newUtente);
     }
 
-    // Metodo save sovraccarico per salvare un oggetto Utente direttamente
     public Utente save(Utente utente) {
         return this.utenteRepository.save(utente);
     }
 
-    //PUT --------------------------------------------
     public Utente findByIdAndUpdate(long id, NewUtenteDTO body) {
         Utente found = this.findById(id);
 
@@ -74,9 +76,19 @@ public class UtenteService {
         return this.utenteRepository.save(found);
     }
 
-    //DELETE --------------------------------------------
     public void findByIdAndDelete(long id) {
         Utente found = this.findById(id);
         this.utenteRepository.delete(found);
+    }
+
+    public String uploadAvatar(MultipartFile file, Long userId) {
+        String url = null;
+        try {
+            // Usa l'oggetto cloudinary per l'upload
+            url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        } catch (IOException e) {
+            throw new BadRequestException("Ci sono stati problemi con l'upload del file!");
+        }
+        return url;
     }
 }

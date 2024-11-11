@@ -19,7 +19,7 @@ public class ComuneService {
     private ComuneRepository comuneRepository;
 
     @Autowired
-    ProvinciaRepository provinciaRepository;
+    private ProvinciaRepository provinciaRepository;
 
     public void importCSV(Reader reader) {
         try (CSVReader csvReader = new CSVReaderBuilder(reader)

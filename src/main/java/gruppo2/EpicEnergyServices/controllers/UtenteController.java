@@ -4,6 +4,7 @@ package gruppo2.EpicEnergyServices.controllers;
 import gruppo2.EpicEnergyServices.entities.Utente;
 import gruppo2.EpicEnergyServices.exceptions.BadRequestException;
 import gruppo2.EpicEnergyServices.payloads.NewUtenteDTO;
+import gruppo2.EpicEnergyServices.services.FileUploadService;
 import gruppo2.EpicEnergyServices.services.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,6 +26,9 @@ public class UtenteController {
 
     @Autowired
     UtenteService utenteService;
+
+    @Autowired
+    FileUploadService fileUploadService;
 
     //questo dovrebbe essere visto solamente dall'admin, ma non lo ho aggiunto perché non è richiesto
     @GetMapping
@@ -45,6 +52,23 @@ public class UtenteController {
     public void deleteProfile(@AuthenticationPrincipal Utente currentAuthenticatedUser) {
         this.utenteService.findByIdAndDelete(currentAuthenticatedUser.getId());
     }
+
+    @PostMapping("/me/avatar")
+    public Utente uploadAvatar(@AuthenticationPrincipal Utente currentAuthenticatedUser,
+                               @RequestParam("file") MultipartFile file) {
+        try {
+            // Carica l'immagine su Cloudinary e ottieni l'URL dell'immagine
+            String avatarUrl = fileUploadService.uploadFile(file, currentAuthenticatedUser.getId());
+
+            // Imposta l'URL dell'avatar nell'entità utente e salva l'utente aggiornato
+            currentAuthenticatedUser.setAvatar(avatarUrl);
+            return utenteService.save(currentAuthenticatedUser);
+        } catch (IOException e) {
+            // Usa ResponseStatusException per gestire l'errore con codice di stato HTTP
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Errore durante l'upload dell'avatar: " + e.getMessage(), e);
+        }
+    }
+
 
     // il resto dei metodi----------------------------------------------------------------
     //questi sono tutti metodi da parte del admin

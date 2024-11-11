@@ -89,6 +89,14 @@ public class Utente implements UserDetails {
         this.role = role;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(this.role.name()));
     }
@@ -103,6 +111,7 @@ public class Utente implements UserDetails {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + role +
+                ", avatar='" + avatar + '\'' +
                 '}';
     }
 }

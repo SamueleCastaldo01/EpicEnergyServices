@@ -1,6 +1,5 @@
 package gruppo2.EpicEnergyServices.services;
 
-
 import gruppo2.EpicEnergyServices.entities.Utente;
 import gruppo2.EpicEnergyServices.exceptions.BadRequestException;
 import gruppo2.EpicEnergyServices.exceptions.NotFoundException;
@@ -35,13 +34,13 @@ public class UtenteService {
 
     //POST -------------------------------------
     public Utente save(NewUtenteDTO body) {
-        //controllo se ci sta già un altro con la stessa email
+        // Controllo se ci sta già un altro con la stessa email
         this.utenteRepository.findByEmail(body.email()).ifPresent(
                 user -> {
                     throw new BadRequestException("Email " + body.email() + " già in uso!");
                 }
         );
-        //controllo anche dell'username, deve essere univoco
+        // Controllo anche dell'username, deve essere univoco
         this.utenteRepository.findByUsername(body.username()).ifPresent(
                 user -> {
                     throw new BadRequestException("Username " + body.username() + " è già in uso!");
@@ -49,6 +48,11 @@ public class UtenteService {
         );
         Utente newUtente = new Utente(body.username(), body.nome(), body.cognome(), body.email(), bcrypt.encode(body.password()));
         return this.utenteRepository.save(newUtente);
+    }
+
+    // Metodo save sovraccarico per salvare un oggetto Utente direttamente
+    public Utente save(Utente utente) {
+        return this.utenteRepository.save(utente);
     }
 
     //PUT --------------------------------------------

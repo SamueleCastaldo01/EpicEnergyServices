@@ -1,7 +1,7 @@
 package gruppo2.EpicEnergyServices.tools;
 
-import castaldosamuele.progetto_java_settimana7.Exceptions.UnauthorizedException;
-import castaldosamuele.progetto_java_settimana7.entities.Utente;
+import gruppo2.EpicEnergyServices.entities.Utente;
+import gruppo2.EpicEnergyServices.exceptions.UnauthorizedException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;

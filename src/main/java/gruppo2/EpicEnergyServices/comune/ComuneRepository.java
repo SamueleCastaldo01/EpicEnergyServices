@@ -1,6 +1,5 @@
-package gruppo2.EpicEnergyServices.repositories;
+package gruppo2.EpicEnergyServices.comune;
 
-import gruppo2.EpicEnergyServices.entities.Comune;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

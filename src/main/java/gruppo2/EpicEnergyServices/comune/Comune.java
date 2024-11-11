@@ -1,5 +1,6 @@
-package gruppo2.EpicEnergyServices.entities;
+package gruppo2.EpicEnergyServices.comune;
 
+import gruppo2.EpicEnergyServices.provincia.Provincia;
 import jakarta.persistence.*;
 
 @Entity

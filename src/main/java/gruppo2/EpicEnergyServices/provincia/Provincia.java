@@ -1,4 +1,4 @@
-package gruppo2.EpicEnergyServices.entities;
+package gruppo2.EpicEnergyServices.provincia;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

@@ -45,8 +45,19 @@ public class FatturaService {
     }
 
     //get by id Cliente
-    public List<Fattura> findByClienteId(Long clienteId) {
-        return fatturaRepository.findByClienteId(clienteId);
+    public Page<Fattura> findByClienteId(Long clienteId) {
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+        return fatturaRepository.findByClienteId(clienteId, pageable);
+    }
+
+    //get by id StatoFattura
+    public Page<Fattura> findByStatoId(Long statoId) {
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+        return fatturaRepository.findByStatoFatturaId(statoId, pageable);
     }
 
     //POST --------------------------------------------

@@ -31,8 +31,13 @@ public class FatturaController {
     }
 
     @GetMapping("/cliente/{clienteId}")
-    public List<Fattura> findByClienteId(@PathVariable Long clienteId) {
+    public Page<Fattura> findByClienteId(@PathVariable Long clienteId) {
         return fatturaService.findByClienteId(clienteId);
+    }
+
+    @GetMapping("/stato-fattura/{statoFatturaId}")
+    public Page<Fattura> findByStatoFatturaId(@PathVariable Long statoFatturaId) {
+        return fatturaService.findByStatoId(statoFatturaId);
     }
 
     @PostMapping

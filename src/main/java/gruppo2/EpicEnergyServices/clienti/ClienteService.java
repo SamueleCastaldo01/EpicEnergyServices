@@ -1,11 +1,16 @@
 package gruppo2.EpicEnergyServices.clienti;
 
+
+import gruppo2.EpicEnergyServices.exceptions.BadRequestException;
+import gruppo2.EpicEnergyServices.exceptions.NotFoundException;
+import gruppo2.EpicEnergyServices.indirizzo.IndirizzoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 public class ClienteService {
@@ -13,84 +18,57 @@ public class ClienteService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    public Page<ClienteDTO> getClienti(Pageable pageable) {
-        return clienteRepository.findAll(pageable).map(this::convertToDTO);
+    @Autowired
+    private IndirizzoRepository indirizzoRepository;
+
+    public Page<Cliente> findAll(int page, int size, String sortBy) {
+        if (size > 100) size = 100;
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return this.clienteRepository.findAll(pageable);
     }
 
-    public ClienteDTO getClienteById(Long id) {
-        return clienteRepository.findById(id).map(this::convertToDTO).orElse(null);
+    public Cliente findClienteById(long clienteId) {
+        return this.clienteRepository.findById(clienteId).orElseThrow(() -> new NotFoundException(clienteId));
     }
 
-    public ClienteDTO createCliente(ClienteDTO clienteDTO) {
-        Cliente cliente = convertToEntity(clienteDTO);
-        cliente = clienteRepository.save(cliente);
-        return convertToDTO(cliente);
-    }
-
-    public ClienteDTO updateCliente(Long id, ClienteDTO clienteDTO) {
-        Optional<Cliente> existingCliente = clienteRepository.findById(id);
-        if (existingCliente.isPresent()) {
-            Cliente cliente = existingCliente.get();
-            cliente.setRagioneSociale(clienteDTO.ragioneSociale());
-            cliente.setPartitaIva(clienteDTO.partitaIva());
-            cliente.setEmail(clienteDTO.email());
-            cliente.setDataInserimento(clienteDTO.dataInserimento());
-            cliente.setDataUltimoContatto(clienteDTO.dataUltimoContatto());
-            cliente.setFatturatoAnnuale(clienteDTO.fatturatoAnnuale());
-            cliente.setPec(clienteDTO.pec());
-            cliente.setTelefono(clienteDTO.telefono());
-            cliente.setEmailContatto(clienteDTO.emailContatto());
-            cliente.setNomeContatto(clienteDTO.nomeContatto());
-            cliente.setCognomeContatto(clienteDTO.cognomeContatto());
-            cliente.setTelefonoContatto(clienteDTO.telefonoContatto());
-            cliente.setLogoAziendale(clienteDTO.logoAziendale());
-            cliente.setTipoCliente(clienteDTO.tipoCliente());
-            cliente = clienteRepository.save(cliente);
-            return convertToDTO(cliente);
-        }
-        return null;
-    }
-
-    public void deleteCliente(Long id) {
-        clienteRepository.deleteById(id);
-    }
-
-    private ClienteDTO convertToDTO(Cliente cliente) {
-        return new ClienteDTO(
-                cliente.getId(),
-                cliente.getRagioneSociale(),
-                cliente.getPartitaIva(),
-                cliente.getEmail(),
-                cliente.getDataInserimento(),
-                cliente.getDataUltimoContatto(),
-                cliente.getFatturatoAnnuale(),
-                cliente.getPec(),
-                cliente.getTelefono(),
-                cliente.getEmailContatto(),
-                cliente.getNomeContatto(),
-                cliente.getCognomeContatto(),
-                cliente.getTelefonoContatto(),
-                cliente.getLogoAziendale(),
-                cliente.getTipoCliente()
+    public Cliente save(NewClienteDTO body) {
+        this.clienteRepository.findbyEmailCliente(body.email()).ifPresent(
+                cliente -> {
+                    throw new BadRequestException("Email" + body.email() + "giá in uso! inseriscine una nuova.");
+                }
         );
+        Cliente newCLiente = new Cliente(
+                body.ragioneSociale(),
+                this.indirizzoRepository.findByIndirizzo(body.sedeOperativa()),
+                this.indirizzoRepository.findByIndirizzo(body.sedeLegale()),
+                body.tipoCliente(),
+                body.logoAziendale(),
+                body.telefonoContatto(),
+                body.cognomeContatto(),
+                body.nomeContatto(),
+                body.telefono(),
+                body.pec(),
+                body.emailContatto(),
+                body.fatturatoAnnuale(),
+                body.dataInserimento(),
+                body.dataUltimoContatto(),
+                body.email(),
+                body.partitaIva());
+
+        return this.clienteRepository.save(newCLiente);
     }
 
-    private Cliente convertToEntity(ClienteDTO clienteDTO) {
-        Cliente cliente = new Cliente();
-        cliente.setRagioneSociale(clienteDTO.ragioneSociale());
-        cliente.setPartitaIva(clienteDTO.partitaIva());
-        cliente.setEmail(clienteDTO.email());
-        cliente.setDataInserimento(clienteDTO.dataInserimento());
-        cliente.setDataUltimoContatto(clienteDTO.dataUltimoContatto());
-        cliente.setFatturatoAnnuale(clienteDTO.fatturatoAnnuale());
-        cliente.setPec(clienteDTO.pec());
-        cliente.setTelefono(clienteDTO.telefono());
-        cliente.setEmailContatto(clienteDTO.emailContatto());
-        cliente.setNomeContatto(clienteDTO.nomeContatto());
-        cliente.setCognomeContatto(clienteDTO.cognomeContatto());
-        cliente.setTelefonoContatto(clienteDTO.telefonoContatto());
-        cliente.setLogoAziendale(clienteDTO.logoAziendale());
-        cliente.setTipoCliente(clienteDTO.tipoCliente());
-        return cliente;
+    public Cliente findByIdAndUpdate(long clienteId, NewClienteDTO body) {
+
+        Cliente found = this.findClienteById(clienteId);
+
+
+        return this.clienteRepository.save(found);
     }
+
+
+
+
+
+
 }

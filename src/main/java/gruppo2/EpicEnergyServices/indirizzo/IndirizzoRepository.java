@@ -5,4 +5,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IndirizzoRepository extends JpaRepository<Indirizzo, Long> {
+    Indirizzo findByIndirizzo(String indirizzo);
 }

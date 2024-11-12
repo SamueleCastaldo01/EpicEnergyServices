@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +41,13 @@ public class FatturaController {
         return fatturaService.findByStatoId(statoFatturaId);
     }
 
+    @GetMapping("/{clienteId}/range")
+    public Page<Fattura> findByDataRange(@PathVariable Long clienteId,
+                                         @RequestParam LocalDate startDate,
+                                         @RequestParam LocalDate endDate) {
+        return fatturaService.findByDataRange(startDate, endDate);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Fattura save(@RequestBody @Validated FatturaDTO body, BindingResult validationResult, @AuthenticationPrincipal Utente currentAuthenticatedUser) {
@@ -58,6 +66,18 @@ public class FatturaController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findByIdAndDelete(@PathVariable long id, @AuthenticationPrincipal Utente currentAuthenticatedUser) {
         this.fatturaService.findByIdAndDelete(id, currentAuthenticatedUser);
+    }
+
+    @GetMapping("/anno")
+    public Page<Fattura> findByAnno(@RequestParam int anno) {
+        return fatturaService.findByAnno(anno);
+    }
+
+
+    @GetMapping("/importo-range")
+    public Page<Fattura> findByImportoRange(@RequestParam double importoMin,
+                                            @RequestParam double importoMax) {
+        return fatturaService.findByImportoRange(importoMin, importoMax);
     }
 
 }

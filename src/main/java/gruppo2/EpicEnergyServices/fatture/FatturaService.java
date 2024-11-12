@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -79,5 +80,28 @@ public class FatturaService {
         this.fatturaRepository.delete(found);
     }
 
+    //filter range data
+    public Page<Fattura> findByDataRange(LocalDate startDate, LocalDate endDate) {
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+        return fatturaRepository.findByDataBetween(startDate, endDate, pageable);
+    }
+
+    //filter fattura in quell'anno
+    public Page<Fattura> findByAnno(int anno) {
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+        return fatturaRepository.findByAnno(anno, pageable);
+    }
+
+    //filter fattura range import
+    public Page<Fattura> findByImportoRange(double importoMin, double importoMax) {
+        int page = 0;
+        int size = 10;
+        Pageable pageable = PageRequest.of(page, size);
+        return fatturaRepository.findByImportoBetween(importoMin, importoMax, pageable);
+    }
 
 }

@@ -53,14 +53,19 @@ public class UtenteController {
     }
 
     @PatchMapping("/me/avatar")
-    public String uploadAvatar(@AuthenticationPrincipal Utente currentAuthenticatedUser, @RequestParam("avatar") MultipartFile file) {
+    public String uploadAvatar(@AuthenticationPrincipal Utente currentAuthenticatedUser,
+                               @RequestParam("avatar") MultipartFile file) {
+        if (file.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Il file è vuoto");
+        }
+
         try {
             String avatarUrl = utenteService.uploadAvatar(file, currentAuthenticatedUser.getId());
             currentAuthenticatedUser.setAvatar(avatarUrl);
             utenteService.save(currentAuthenticatedUser);
             return avatarUrl;
-        } catch (Exception e) {  // Gestione dell'eccezione generica
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Errore durante l'upload dell'avatar: " + e.getMessage(), e);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Errore durante l'upload dell'avatar: " + e.getMessage(), e);
         }
     }
 

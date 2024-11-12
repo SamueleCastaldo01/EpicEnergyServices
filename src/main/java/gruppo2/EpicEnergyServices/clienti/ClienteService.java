@@ -6,11 +6,12 @@ import gruppo2.EpicEnergyServices.exceptions.NotFoundException;
 import gruppo2.EpicEnergyServices.indirizzo.IndirizzoRepository;
 import gruppo2.EpicEnergyServices.indirizzo.IndirizzoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 
 
 @Service
@@ -89,12 +90,43 @@ public class ClienteService {
         return this.clienteRepository.save(found);
     }
 
-public void findByIdAndDelete (long clienteId) {
-        Cliente found = this.findClienteById(clienteId);
-        this.clienteRepository.delete(found);
-}
+    public void findByIdAndDelete (long clienteId) {
+            Cliente found = this.findClienteById(clienteId);
+            this.clienteRepository.delete(found);
+    }
 
 
+    //vari ordinamenti: ordinamento---------------------
+    public Page<Cliente> findAllSortedByNomeContatto(Pageable pageable) {
+        return clienteRepository.findAllByOrderByNomeContattoAsc(pageable);
+    }
 
+    public Page<Cliente> findAllSortedByFatturatoAnnuale(Pageable pageable) {
+        return clienteRepository.findAllByOrderByFatturatoAnnualeAsc(pageable);
+    }
+
+    public Page<Cliente> findAllSortedByDataInserimento(Pageable pageable) {
+        return clienteRepository.findAllByOrderByDataInserimentoDesc(pageable);
+    }
+
+    public Page<Cliente> findAllSortedByDataUltimoContatto(Pageable pageable) {
+        return clienteRepository.findAllByOrderByDataUltimoContattoDesc(pageable);
+    }
+
+    //filtro fatturato -----------------------------
+    public Page<Cliente> findByFatturatoAnnualeBetween(BigDecimal minFatturato, BigDecimal maxFatturato) {
+        PageRequest pageRequest = PageRequest.of(0, 10); // page = 0 e size = 10
+        return clienteRepository.findByFatturatoAnnualeBetween(minFatturato, maxFatturato, pageRequest);
+    }
+
+    //filtro data inserimento
+    public Page<Cliente> findByDataInserimento(LocalDate dataInserimento, int page) {
+        if (page < 0) {
+            page = 0;
+        }
+        Pageable pageable = PageRequest.of(page, 10);
+        List<Cliente> clientiFiltrati = clienteRepository.findByDataInserimento(dataInserimento);
+        return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
+    }
 
 }

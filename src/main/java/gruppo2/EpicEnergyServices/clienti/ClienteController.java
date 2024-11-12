@@ -10,6 +10,11 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Pageable;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 
 @RestController
 @RequestMapping("/clienti")
@@ -63,7 +68,40 @@ public class ClienteController {
 
 
 
+    //ordinamento-------------------------------------
+    @GetMapping("/sorted-by-nome")
+    public Page<Cliente> getAllClientsSortedByNomeContatto(Pageable pageable) {
+        return clienteService.findAllSortedByNomeContatto(pageable);
+    }
 
+    @GetMapping("/sorted-by-fatturato")
+    public Page<Cliente> getAllClientsSortedByFatturatoAnnuale(Pageable pageable) {
+        return clienteService.findAllSortedByFatturatoAnnuale(pageable);
+    }
 
+    @GetMapping("/sorted-by-data-inserimento")
+    public Page<Cliente> getAllClientsSortedByDataInserimento(Pageable pageable) {
+        return clienteService.findAllSortedByFatturatoAnnuale(pageable);
+    }
 
+    @GetMapping("/sorted-by-data-ultimo-contatto")
+    public Page<Cliente> getAllClientsSortedByDataContatto(Pageable pageable) {
+        return clienteService.findAllSortedByFatturatoAnnuale(pageable);
+    }
+
+    //vari filtri ------------------------------------------------------
+    // fatturato
+    @GetMapping("/filtered-by-fatturato")
+    public Page<Cliente> getClientsByFatturatoAnnuale(
+            @RequestParam BigDecimal minFatturato,
+            @RequestParam BigDecimal maxFatturato) {
+        return clienteService.findByFatturatoAnnualeBetween(minFatturato, maxFatturato);
+    }
+
+    @GetMapping("/filtered-by-data-inserimento")
+    public Page<Cliente> getClientsByDataInserimento(
+            @RequestParam LocalDate dataInserimento,
+            @RequestParam(defaultValue = "0") int page) {
+        return clienteService.findByDataInserimento(dataInserimento, page);
+    }
 }

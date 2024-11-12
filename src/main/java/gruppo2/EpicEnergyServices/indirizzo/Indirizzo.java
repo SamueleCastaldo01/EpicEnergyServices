@@ -13,7 +13,7 @@ public class Indirizzo {
     private String via;
     private long civico;
     private String localita;
-    private int cap;
+    private long cap;
 
     @ManyToOne
     @JoinColumn(name = "id_comune")
@@ -22,12 +22,44 @@ public class Indirizzo {
     public Indirizzo() {
     }
 
-    public Indirizzo(String via, long civico, String localita, int cap, Comune comune) {
+    public Indirizzo(String via, long civico, String localita, long cap, Comune comune) {
         this.via = via;
         this.civico = civico;
         this.localita = localita;
         this.cap = cap;
         this.comune = comune;
+    }
+
+    public Comune getComune() {
+        return comune;
+    }
+
+    public void setComune(Comune comune) {
+        this.comune = comune;
+    }
+
+    public long getCap() {
+        return cap;
+    }
+
+    public void setCap(long cap) {
+        this.cap = cap;
+    }
+
+    public String getLocalita() {
+        return localita;
+    }
+
+    public void setLocalita(String localita) {
+        this.localita = localita;
+    }
+
+    public long getCivico() {
+        return civico;
+    }
+
+    public void setCivico(long civico) {
+        this.civico = civico;
     }
 
     public String getVia() {
@@ -40,38 +72,6 @@ public class Indirizzo {
 
     public long getId() {
         return id;
-    }
-
-    public long getCivico() {
-        return civico;
-    }
-
-    public void setCivico(long civico) {
-        this.civico = civico;
-    }
-
-    public String getLocalita() {
-        return localita;
-    }
-
-    public void setLocalita(String localita) {
-        this.localita = localita;
-    }
-
-    public int getCap() {
-        return cap;
-    }
-
-    public void setCap(int cap) {
-        this.cap = cap;
-    }
-
-    public Comune getComune() {
-        return comune;
-    }
-
-    public void setComune(Comune comune) {
-        this.comune = comune;
     }
 
     @Override

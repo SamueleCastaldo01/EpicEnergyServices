@@ -1,7 +1,7 @@
-package gruppo2.EpicEnergyServices.payloads;
+package gruppo2.EpicEnergyServices.indirizzo;
 
-import gruppo2.EpicEnergyServices.comune.Comune;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 public record NewIndirizzoDTO(
         @NotEmpty(message = "La via è obbligatoria")
@@ -12,7 +12,7 @@ public record NewIndirizzoDTO(
         String localita,
         @NotEmpty(message = "Il cap è obbligatorio")
         Integer cap,
-        @NotEmpty(message = "Il comune è obbligatorio")
-        Comune comune
+        @NotNull
+        String comune
 ) {
 }

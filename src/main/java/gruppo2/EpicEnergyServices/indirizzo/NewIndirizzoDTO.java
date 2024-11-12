@@ -6,13 +6,13 @@ import jakarta.validation.constraints.NotNull;
 public record NewIndirizzoDTO(
         @NotEmpty(message = "La via è obbligatoria")
         String via,
-        @NotEmpty(message = "Il numero civico é obbligatorio")
-        Long civico,
+        @NotNull(message = "Il numero civico é obbligatorio")
+        long civico,
         @NotEmpty(message = "La localitá è obbligatoria")
         String localita,
-        @NotEmpty(message = "Il cap è obbligatorio")
-        Integer cap,
-        @NotNull
+        @NotNull(message = "Il numero civico é obbligatorio")
+        long cap,
+        @NotNull()
         String comune
 ) {
 }

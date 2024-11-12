@@ -104,4 +104,19 @@ public class ClienteController {
             @RequestParam(defaultValue = "0") int page) {
         return clienteService.findByDataInserimento(dataInserimento, page);
     }
+
+    @GetMapping("/filtered-by-data-ultimo-contatto")
+    public Page<Cliente> getClientsByDataUltimoContatto(
+            @RequestParam LocalDate dataUltimoContatto,
+            @RequestParam(defaultValue = "0") int page) {
+        return clienteService.findByDataUltimoContatto(dataUltimoContatto, page);
+    }
+
+    @GetMapping("/filtered-by-nome-contatto")
+    public Page<Cliente> getClientsByNomeContatto(
+            @RequestParam String nomeContatto,
+            @RequestParam(defaultValue = "0") int page) {
+        return clienteService.findByNomeContatto(nomeContatto, page);
+    }
+
 }

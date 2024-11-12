@@ -129,4 +129,25 @@ public class ClienteService {
         return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
     }
 
+    //filtro data ultimo contatto
+    public Page<Cliente> findByDataUltimoContatto(LocalDate dataUltimoContatto, int page) {
+        if (page < 0) {
+            page = 0;
+        }
+        Pageable pageable = PageRequest.of(page, 10);
+        List<Cliente> clientiFiltrati = clienteRepository.findByDataUltimoContatto(dataUltimoContatto);
+        return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
+    }
+
+
+    //filtro nome Contatto
+    public Page<Cliente> findByNomeContatto(String nomeContatto, int page) {
+        if (page < 0) {
+            page = 0;
+        }
+        Pageable pageable = PageRequest.of(page, 10);
+        List<Cliente> clientiFiltrati = clienteRepository.findByNomeContattoStartingWithIgnoreCase(nomeContatto);
+        return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
+    }
+
 }

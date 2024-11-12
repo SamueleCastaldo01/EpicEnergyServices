@@ -21,5 +21,6 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     Page<Cliente> findAllByOrderByDataUltimoContattoDesc(Pageable pageable);
     Page<Cliente> findByFatturatoAnnualeBetween(BigDecimal minFatturato, BigDecimal maxFatturato, Pageable pageable);
     List<Cliente> findByDataInserimento(LocalDate dataInserimento);
-
+    List<Cliente> findByDataUltimoContatto(LocalDate dataContatto);
+    List<Cliente> findByNomeContattoStartingWithIgnoreCase(String nomeContatto);
 }

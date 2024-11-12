@@ -31,23 +31,6 @@ public class FatturaController {
         return this.fatturaService.findAll(page, size, sortBy);
     }
 
-    @GetMapping("/cliente/{clienteId}")
-    public Page<Fattura> findByClienteId(@PathVariable Long clienteId) {
-        return fatturaService.findByClienteId(clienteId);
-    }
-
-    @GetMapping("/stato-fattura/{statoFatturaId}")
-    public Page<Fattura> findByStatoFatturaId(@PathVariable Long statoFatturaId) {
-        return fatturaService.findByStatoId(statoFatturaId);
-    }
-
-    @GetMapping("/{clienteId}/range")
-    public Page<Fattura> findByDataRange(@PathVariable Long clienteId,
-                                         @RequestParam LocalDate startDate,
-                                         @RequestParam LocalDate endDate) {
-        return fatturaService.findByDataRange(startDate, endDate);
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Fattura save(@RequestBody @Validated FatturaDTO body, BindingResult validationResult, @AuthenticationPrincipal Utente currentAuthenticatedUser) {
@@ -68,11 +51,28 @@ public class FatturaController {
         this.fatturaService.findByIdAndDelete(id, currentAuthenticatedUser);
     }
 
+    //query richieste dalla traccia--------------------------------
+    @GetMapping("/cliente/{clienteId}")
+    public Page<Fattura> findByClienteId(@PathVariable Long clienteId) {
+        return fatturaService.findByClienteId(clienteId);
+    }
+
+    @GetMapping("/stato-fattura/{statoFatturaId}")
+    public Page<Fattura> findByStatoFatturaId(@PathVariable Long statoFatturaId) {
+        return fatturaService.findByStatoId(statoFatturaId);
+    }
+
+    @GetMapping("/{clienteId}/range")
+    public Page<Fattura> findByDataRange(@PathVariable Long clienteId,
+                                         @RequestParam LocalDate startDate,
+                                         @RequestParam LocalDate endDate) {
+        return fatturaService.findByDataRange(startDate, endDate);
+    }
+
     @GetMapping("/anno")
     public Page<Fattura> findByAnno(@RequestParam int anno) {
         return fatturaService.findByAnno(anno);
     }
-
 
     @GetMapping("/importo-range")
     public Page<Fattura> findByImportoRange(@RequestParam double importoMin,

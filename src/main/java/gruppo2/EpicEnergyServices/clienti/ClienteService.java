@@ -1,9 +1,5 @@
 package gruppo2.EpicEnergyServices.clienti;
 
-import gruppo2.EpicEnergyServices.clienti.Cliente;
-import gruppo2.EpicEnergyServices.clienti.ClienteRepository;
-import gruppo2.EpicEnergyServices.clienti.ClienteDTO;
-import gruppo2.EpicEnergyServices.clienti.TipoCliente;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,20 +31,20 @@ public class ClienteService {
         Optional<Cliente> existingCliente = clienteRepository.findById(id);
         if (existingCliente.isPresent()) {
             Cliente cliente = existingCliente.get();
-            cliente.setRagioneSociale(clienteDTO.getRagioneSociale());
-            cliente.setPartitaIva(clienteDTO.getPartitaIva());
-            cliente.setEmail(clienteDTO.getEmail());
-            cliente.setDataInserimento(clienteDTO.getDataInserimento());
-            cliente.setDataUltimoContatto(clienteDTO.getDataUltimoContatto());
-            cliente.setFatturatoAnnuale(clienteDTO.getFatturatoAnnuale());
-            cliente.setPec(clienteDTO.getPec());
-            cliente.setTelefono(clienteDTO.getTelefono());
-            cliente.setEmailContatto(clienteDTO.getEmailContatto());
-            cliente.setNomeContatto(clienteDTO.getNomeContatto());
-            cliente.setCognomeContatto(clienteDTO.getCognomeContatto());
-            cliente.setTelefonoContatto(clienteDTO.getTelefonoContatto());
-            cliente.setLogoAziendale(clienteDTO.getLogoAziendale());
-            cliente.setTipoCliente(clienteDTO.getTipoCliente());
+            cliente.setRagioneSociale(clienteDTO.ragioneSociale());
+            cliente.setPartitaIva(clienteDTO.partitaIva());
+            cliente.setEmail(clienteDTO.email());
+            cliente.setDataInserimento(clienteDTO.dataInserimento());
+            cliente.setDataUltimoContatto(clienteDTO.dataUltimoContatto());
+            cliente.setFatturatoAnnuale(clienteDTO.fatturatoAnnuale());
+            cliente.setPec(clienteDTO.pec());
+            cliente.setTelefono(clienteDTO.telefono());
+            cliente.setEmailContatto(clienteDTO.emailContatto());
+            cliente.setNomeContatto(clienteDTO.nomeContatto());
+            cliente.setCognomeContatto(clienteDTO.cognomeContatto());
+            cliente.setTelefonoContatto(clienteDTO.telefonoContatto());
+            cliente.setLogoAziendale(clienteDTO.logoAziendale());
+            cliente.setTipoCliente(clienteDTO.tipoCliente());
             cliente = clienteRepository.save(cliente);
             return convertToDTO(cliente);
         }
@@ -60,41 +56,41 @@ public class ClienteService {
     }
 
     private ClienteDTO convertToDTO(Cliente cliente) {
-        ClienteDTO clienteDTO = new ClienteDTO();
-        clienteDTO.setId(cliente.getId());
-        clienteDTO.setRagioneSociale(cliente.getRagioneSociale());
-        clienteDTO.setPartitaIva(cliente.getPartitaIva());
-        clienteDTO.setEmail(cliente.getEmail());
-        clienteDTO.setDataInserimento(cliente.getDataInserimento());
-        clienteDTO.setDataUltimoContatto(cliente.getDataUltimoContatto());
-        clienteDTO.setFatturatoAnnuale(cliente.getFatturatoAnnuale());
-        clienteDTO.setPec(cliente.getPec());
-        clienteDTO.setTelefono(cliente.getTelefono());
-        clienteDTO.setEmailContatto(cliente.getEmailContatto());
-        clienteDTO.setNomeContatto(cliente.getNomeContatto());
-        clienteDTO.setCognomeContatto(cliente.getCognomeContatto());
-        clienteDTO.setTelefonoContatto(cliente.getTelefonoContatto());
-        clienteDTO.setLogoAziendale(cliente.getLogoAziendale());
-        clienteDTO.setTipoCliente(cliente.getTipoCliente());
-        return clienteDTO;
+        return new ClienteDTO(
+                cliente.getId(),
+                cliente.getRagioneSociale(),
+                cliente.getPartitaIva(),
+                cliente.getEmail(),
+                cliente.getDataInserimento(),
+                cliente.getDataUltimoContatto(),
+                cliente.getFatturatoAnnuale(),
+                cliente.getPec(),
+                cliente.getTelefono(),
+                cliente.getEmailContatto(),
+                cliente.getNomeContatto(),
+                cliente.getCognomeContatto(),
+                cliente.getTelefonoContatto(),
+                cliente.getLogoAziendale(),
+                cliente.getTipoCliente()
+        );
     }
 
     private Cliente convertToEntity(ClienteDTO clienteDTO) {
         Cliente cliente = new Cliente();
-        cliente.setRagioneSociale(clienteDTO.getRagioneSociale());
-        cliente.setPartitaIva(clienteDTO.getPartitaIva());
-        cliente.setEmail(clienteDTO.getEmail());
-        cliente.setDataInserimento(clienteDTO.getDataInserimento());
-        cliente.setDataUltimoContatto(clienteDTO.getDataUltimoContatto());
-        cliente.setFatturatoAnnuale(clienteDTO.getFatturatoAnnuale());
-        cliente.setPec(clienteDTO.getPec());
-        cliente.setTelefono(clienteDTO.getTelefono());
-        cliente.setEmailContatto(clienteDTO.getEmailContatto());
-        cliente.setNomeContatto(clienteDTO.getNomeContatto());
-        cliente.setCognomeContatto(clienteDTO.getCognomeContatto());
-        cliente.setTelefonoContatto(clienteDTO.getTelefonoContatto());
-        cliente.setLogoAziendale(clienteDTO.getLogoAziendale());
-        cliente.setTipoCliente(clienteDTO.getTipoCliente());
+        cliente.setRagioneSociale(clienteDTO.ragioneSociale());
+        cliente.setPartitaIva(clienteDTO.partitaIva());
+        cliente.setEmail(clienteDTO.email());
+        cliente.setDataInserimento(clienteDTO.dataInserimento());
+        cliente.setDataUltimoContatto(clienteDTO.dataUltimoContatto());
+        cliente.setFatturatoAnnuale(clienteDTO.fatturatoAnnuale());
+        cliente.setPec(clienteDTO.pec());
+        cliente.setTelefono(clienteDTO.telefono());
+        cliente.setEmailContatto(clienteDTO.emailContatto());
+        cliente.setNomeContatto(clienteDTO.nomeContatto());
+        cliente.setCognomeContatto(clienteDTO.cognomeContatto());
+        cliente.setTelefonoContatto(clienteDTO.telefonoContatto());
+        cliente.setLogoAziendale(clienteDTO.logoAziendale());
+        cliente.setTipoCliente(clienteDTO.tipoCliente());
         return cliente;
     }
 }

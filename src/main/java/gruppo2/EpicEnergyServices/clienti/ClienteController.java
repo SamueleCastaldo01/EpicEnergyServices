@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/clienti")
+@RequestMapping("/clienti")
 public class ClienteController {
 
     @Autowired

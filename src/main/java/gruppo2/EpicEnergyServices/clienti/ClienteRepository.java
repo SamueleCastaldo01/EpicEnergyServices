@@ -11,10 +11,4 @@ import java.time.LocalDate;
 @Repository
 public interface ClienteRepository extends JpaRepository<gruppo2.EpicEnergyServices.clienti.Cliente, Long> {
 
-    Page<gruppo2.EpicEnergyServices.clienti.Cliente> findByFatturatoAnnuale(BigDecimal fatturatoAnnuale, Pageable pageable);
-    Page<gruppo2.EpicEnergyServices.clienti.Cliente> findByDataInserimento(LocalDate dataInserimento, Pageable pageable);
-    Page<gruppo2.EpicEnergyServices.clienti.Cliente> findByDataUltimoContatto(LocalDate dataUltimoContatto, Pageable pageable);
-    Page<gruppo2.EpicEnergyServices.clienti.Cliente> findByRagioneSocialeContainingIgnoreCase(String ragioneSociale, Pageable pageable);
-
-    Page<gruppo2.EpicEnergyServices.clienti.Cliente> findBySedeLegaleComuneProvinciaNome(String provincia, Pageable pageable);
 }

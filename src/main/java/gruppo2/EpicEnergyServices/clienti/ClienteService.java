@@ -3,9 +3,9 @@ package gruppo2.EpicEnergyServices.clienti;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ClienteService {
@@ -18,7 +18,9 @@ public class ClienteService {
     }
 
     public ClienteDTO getClienteById(Long id) {
-        return clienteRepository.findById(id).map(this::convertToDTO).orElse(null);
+        return clienteRepository.findById(id)
+                .map(this::convertToDTO)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente non trovato con ID: " + id));
     }
 
     public ClienteDTO createCliente(ClienteDTO clienteDTO) {
@@ -28,31 +30,32 @@ public class ClienteService {
     }
 
     public ClienteDTO updateCliente(Long id, ClienteDTO clienteDTO) {
-        Optional<Cliente> existingCliente = clienteRepository.findById(id);
-        if (existingCliente.isPresent()) {
-            Cliente cliente = existingCliente.get();
-            cliente.setRagioneSociale(clienteDTO.ragioneSociale());
-            cliente.setPartitaIva(clienteDTO.partitaIva());
-            cliente.setEmail(clienteDTO.email());
-            cliente.setDataInserimento(clienteDTO.dataInserimento());
-            cliente.setDataUltimoContatto(clienteDTO.dataUltimoContatto());
-            cliente.setFatturatoAnnuale(clienteDTO.fatturatoAnnuale());
-            cliente.setPec(clienteDTO.pec());
-            cliente.setTelefono(clienteDTO.telefono());
-            cliente.setEmailContatto(clienteDTO.emailContatto());
-            cliente.setNomeContatto(clienteDTO.nomeContatto());
-            cliente.setCognomeContatto(clienteDTO.cognomeContatto());
-            cliente.setTelefonoContatto(clienteDTO.telefonoContatto());
-            cliente.setLogoAziendale(clienteDTO.logoAziendale());
-            cliente.setTipoCliente(clienteDTO.tipoCliente());
-            cliente = clienteRepository.save(cliente);
-            return convertToDTO(cliente);
-        }
-        return null;
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente non trovato con ID: " + id));
+
+        cliente.setRagioneSociale(clienteDTO.ragioneSociale());
+        cliente.setPartitaIva(clienteDTO.partitaIva());
+        cliente.setEmail(clienteDTO.email());
+        cliente.setDataInserimento(clienteDTO.dataInserimento());
+        cliente.setDataUltimoContatto(clienteDTO.dataUltimoContatto());
+        cliente.setFatturatoAnnuale(clienteDTO.fatturatoAnnuale());
+        cliente.setPec(clienteDTO.pec());
+        cliente.setTelefono(clienteDTO.telefono());
+        cliente.setEmailContatto(clienteDTO.emailContatto());
+        cliente.setNomeContatto(clienteDTO.nomeContatto());
+        cliente.setCognomeContatto(clienteDTO.cognomeContatto());
+        cliente.setTelefonoContatto(clienteDTO.telefonoContatto());
+        cliente.setLogoAziendale(clienteDTO.logoAziendale());
+        cliente.setTipoCliente(clienteDTO.tipoCliente());
+
+        cliente = clienteRepository.save(cliente);
+        return convertToDTO(cliente);
     }
 
     public void deleteCliente(Long id) {
-        clienteRepository.deleteById(id);
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente non trovato con ID: " + id));
+        clienteRepository.delete(cliente);
     }
 
     private ClienteDTO convertToDTO(Cliente cliente) {

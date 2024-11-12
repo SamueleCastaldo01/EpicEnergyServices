@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class ClienteController {
 
     @Autowired
-    private ClienteDTO.ClienteService clienteService;
+    private ClienteService clienteService;
 
     @GetMapping
     public ResponseEntity<Page<ClienteDTO>> getAllClienti(Pageable pageable) {

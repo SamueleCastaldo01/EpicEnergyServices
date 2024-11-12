@@ -44,6 +44,10 @@ public class Cliente {
         return id;
     }
 
+    public Cliente () {
+
+    }
+
     public Cliente(String ragioneSociale, String partitaIva, String email, LocalDate dataInserimento, LocalDate dataUltimoContatto, BigDecimal fatturatoAnnuale, String pec, String telefono, String emailContatto, String nomeContatto, String cognomeContatto, String telefonoContatto, String logoAziendale, TipoCliente tipoCliente, Indirizzo sedeLegale, Indirizzo sedeOperativa) {
         this.ragioneSociale = ragioneSociale;
         this.partitaIva = partitaIva;

@@ -41,26 +41,26 @@ public class ClienteController {
         return this.clienteService.save(body);
     }
 
-    @GetMapping("/clienteId")
-    public Cliente findById(@PathVariable long dipendenteid) {
-        return this.clienteService.findClienteById(dipendenteid);
+    @GetMapping("/{clienteId}")
+    public Cliente findById(@PathVariable long clienteId) {
+        return this.clienteService.findClienteById(clienteId);
     }
 
-    @PutMapping("/{cienteId}")
-    public Cliente findByIdAndUpdate(@PathVariable long dipendenteid, @RequestBody @Validated NewClienteDTO body, BindingResult validationResult) {
+    @PutMapping("/{clienteId}")
+    public Cliente findByIdAndUpdate(@PathVariable long clienteId, @RequestBody @Validated NewClienteDTO body, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             validationResult.getAllErrors().forEach(System.out::println);
             throw new BadRequestException("Ci sono stati errori nel payload!");
         }
-        return this.clienteService.findByIdAndUpdate(dipendenteid, body);
+        return this.clienteService.findByIdAndUpdate(clienteId, body);
     }
 
-//    @DeleteMapping
-//    @ResponseStatus(HttpStatus.NO_CONTENT)
-//    public void findByIdAndDelete(@PathVariable long dipendenteid) {
-//        return this.clienteService.findIdAndDelete(dipendenteid);
-//    }
-//
+    @DeleteMapping("/{clienteId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void findByIdAndDelete(@PathVariable long clienteId) {
+        this.clienteService.findByIdAndDelete(clienteId);
+    }
+
 
 
 

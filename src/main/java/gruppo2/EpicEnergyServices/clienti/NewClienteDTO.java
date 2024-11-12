@@ -6,8 +6,8 @@ import java.time.LocalDate;
 public record NewClienteDTO(
 
         String ragioneSociale ,
-        String sedeOperativa ,
-        String sedeLegale ,
+        long idSedeOperativa ,
+        long idSedeLegale ,
         TipoCliente tipoCliente ,
         String logoAziendale ,
         String telefonoContatto,

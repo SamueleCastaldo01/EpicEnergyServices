@@ -13,9 +13,11 @@ public class Fattura {
     @Id
     @GeneratedValue
     private long id;
+
     @ManyToOne
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
+
     private LocalDate data;
     private double importo;
     private int numero;

@@ -25,7 +25,7 @@ public class UtenteService {
 
     // Aggiunge l'iniezione del bean Cloudinary
     @Autowired
-    private Cloudinary cloudinary;
+    private Cloudinary cloudinaryUploader;
 
     public Utente findById(long id) {
         return this.utenteRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
@@ -81,11 +81,10 @@ public class UtenteService {
         this.utenteRepository.delete(found);
     }
 
-    public String uploadAvatar(MultipartFile file, Long userId) {
+    public String uploadAvatar(MultipartFile file, long userId) {
         String url = null;
         try {
-            // Usa l'oggetto cloudinary per l'upload
-            url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+            url = (String) cloudinaryUploader.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         } catch (IOException e) {
             throw new BadRequestException("Ci sono stati problemi con l'upload del file!");
         }

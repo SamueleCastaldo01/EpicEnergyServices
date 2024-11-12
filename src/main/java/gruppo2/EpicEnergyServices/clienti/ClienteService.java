@@ -58,9 +58,9 @@ public class ClienteService {
         return this.clienteRepository.save(newCLiente);
     }
 
-    public Cliente findByIdAndUpdate(long dipendenteId, NewClienteDTO body) {
+    public Cliente findByIdAndUpdate(long clienteId, NewClienteDTO body) {
 
-        Cliente found = this.findClienteById(dipendenteId);
+        Cliente found = this.findClienteById(clienteId);
 
 
         return this.clienteRepository.save(found);

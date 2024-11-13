@@ -5,6 +5,7 @@ package gruppo2.EpicEnergyServices.clienti;
 import gruppo2.EpicEnergyServices.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -93,6 +94,7 @@ public class ClienteController {
 
     //vari filtri ------------------------------------------------------
     // fatturato
+    /*
     @GetMapping("/filtered")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> getFilteredClients(
@@ -120,6 +122,27 @@ public class ClienteController {
         }
 
         return clienteService.findAll(page);
+    } */
+
+    @GetMapping("/filtered")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public Page<Cliente> getFilteredClients(
+            @RequestParam(required = false) BigDecimal minFatturato,
+            @RequestParam(required = false) BigDecimal maxFatturato,
+            @RequestParam(required = false) LocalDate dataInserimento,
+            @RequestParam(required = false) LocalDate dataUltimoContatto,
+            @RequestParam(required = false) String nomeContatto,
+            @RequestParam(defaultValue = "0") int page) {
+
+        return clienteService.findFilteredClients(
+                minFatturato,
+                maxFatturato,
+                dataInserimento,
+                dataUltimoContatto,
+                nomeContatto,
+                page
+        );
     }
+
 
 }

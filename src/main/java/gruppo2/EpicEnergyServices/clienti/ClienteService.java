@@ -155,4 +155,39 @@ public class ClienteService {
         return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
     }
 
+
+    //find
+    public Page<Cliente> findFilteredClients(
+            BigDecimal minFatturato,
+            BigDecimal maxFatturato,
+            LocalDate dataInserimento,
+            LocalDate dataUltimoContatto,
+            String nomeContatto,
+            int page) {
+
+        Pageable pageable = PageRequest.of(Math.max(page, 0), 10);
+
+        if (minFatturato != null && maxFatturato != null) {
+            return clienteRepository.findByFatturatoAnnualeBetween(minFatturato, maxFatturato, pageable);
+        }
+
+        if (dataInserimento != null) {
+            List<Cliente> clientiFiltrati = clienteRepository.findByDataInserimento(dataInserimento);
+            return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
+        }
+
+        if (dataUltimoContatto != null) {
+            List<Cliente> clientiFiltrati = clienteRepository.findByDataUltimoContatto(dataUltimoContatto);
+            return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
+        }
+
+        if (nomeContatto != null && !nomeContatto.isEmpty()) {
+            List<Cliente> clientiFiltrati = clienteRepository.findByNomeContattoStartingWithIgnoreCase(nomeContatto);
+            return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
+        }
+
+        return clienteRepository.findAllByOrderByNomeContattoAsc(pageable);
+    }
+
+
 }

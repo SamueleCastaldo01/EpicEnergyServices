@@ -22,14 +22,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer.disable());
-        httpSecurity.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
-
-        httpSecurity.sessionManagement(httpSecuritySessionManagementConfigurer ->
-                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-
-        httpSecurity.authorizeHttpRequests(authorizationManagerRequestMatcherRegistry ->
-                authorizationManagerRequestMatcherRegistry.requestMatchers("/**").permitAll());
+        httpSecurity.formLogin(http -> http.disable());
+        httpSecurity.csrf(http -> http.disable());
+        httpSecurity.sessionManagement(http -> http.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        httpSecurity.authorizeHttpRequests(auth -> auth.requestMatchers("/**").permitAll());
 
         return httpSecurity.build();
     }

@@ -16,24 +16,31 @@ public record ClienteDTO(
         @Pattern(regexp = "^[0-9]{11}$", message = "La Partita IVA deve avere 11 numeri")
         String partitaIva,
 
+        @NotBlank(message = "L'email è obbligatoria")
         @Email(message = "Email non valida")
         String email,
 
         @NotNull(message = "Data di Inserimento è obbligatoria")
+        @PastOrPresent(message = "La Data di Inserimento non può essere futura")
         LocalDate dataInserimento,
 
         @NotNull(message = "Data dell'ultimo contatto è obbligatoria")
+        @PastOrPresent(message = "La Data dell'ultimo contatto non può essere futura")
         LocalDate dataUltimoContatto,
 
+        @NotNull(message = "Il fatturato annuale è obbligatorio")
         @Positive(message = "Il fatturato annuale deve essere maggiore di zero")
         BigDecimal fatturatoAnnuale,
 
+        @NotBlank(message = "L'email è obbligatoria")
         @Email(message = "PEC non valida")
         String pec,
 
-        @Pattern(regexp = "^\\+?[0-9]*$", message = "Telefono non valido")
+        @NotBlank(message = "Il telefono è obbligatorio")
+        @Pattern(regexp = "\\+?\\d{1,4}\\s?\\d{10}", message = "Il telefono deve essere un numero di 10 cifre")
         String telefono,
 
+        @NotBlank(message = "L'email è obbligatoria")
         @Email(message = "Email di contatto non valida")
         String emailContatto,
 
@@ -43,7 +50,8 @@ public record ClienteDTO(
         @NotBlank(message = "Cognome del contatto è obbligatorio")
         String cognomeContatto,
 
-        @Pattern(regexp = "^\\+?[0-9]*$", message = "Telefono contatto non valido")
+        @NotBlank(message = "Il telefono è obbligatorio")
+        @Pattern(regexp = "\\+?\\d{1,4}\\s?\\d{10}", message = "Il telefono deve essere un numero di 10 cifre")
         String telefonoContatto,
 
         String logoAziendale,

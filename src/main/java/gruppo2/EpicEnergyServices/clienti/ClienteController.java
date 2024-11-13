@@ -6,6 +6,7 @@ import gruppo2.EpicEnergyServices.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ public class ClienteController {
 
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> findALl(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -33,6 +35,7 @@ public class ClienteController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente save(@RequestBody @Validated NewClienteDTO body, BindingResult validationResult) {
         if(validationResult.hasErrors()) {
@@ -47,11 +50,13 @@ public class ClienteController {
     }
 
     @GetMapping("/{clienteId}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Cliente findById(@PathVariable long clienteId) {
         return this.clienteService.findClienteById(clienteId);
     }
 
     @PutMapping("/{clienteId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public Cliente findByIdAndUpdate(@PathVariable long clienteId, @RequestBody @Validated NewClienteDTO body, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             validationResult.getAllErrors().forEach(System.out::println);
@@ -61,6 +66,7 @@ public class ClienteController {
     }
 
     @DeleteMapping("/{clienteId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findByIdAndDelete(@PathVariable long clienteId) {
         this.clienteService.findByIdAndDelete(clienteId);
@@ -70,21 +76,25 @@ public class ClienteController {
 
     //ordinamento-------------------------------------
     @GetMapping("/sorted-by-nome")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> getAllClientsSortedByNomeContatto(Pageable pageable) {
         return clienteService.findAllSortedByNomeContatto(pageable);
     }
 
     @GetMapping("/sorted-by-fatturato")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> getAllClientsSortedByFatturatoAnnuale(Pageable pageable) {
         return clienteService.findAllSortedByFatturatoAnnuale(pageable);
     }
 
     @GetMapping("/sorted-by-data-inserimento")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> getAllClientsSortedByDataInserimento(Pageable pageable) {
         return clienteService.findAllSortedByFatturatoAnnuale(pageable);
     }
 
     @GetMapping("/sorted-by-data-ultimo-contatto")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> getAllClientsSortedByDataContatto(Pageable pageable) {
         return clienteService.findAllSortedByFatturatoAnnuale(pageable);
     }
@@ -92,6 +102,7 @@ public class ClienteController {
     //vari filtri ------------------------------------------------------
     // fatturato
     @GetMapping("/filtered-by-fatturato")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> getClientsByFatturatoAnnuale(
             @RequestParam BigDecimal minFatturato,
             @RequestParam BigDecimal maxFatturato) {
@@ -99,6 +110,7 @@ public class ClienteController {
     }
 
     @GetMapping("/filtered-by-data-inserimento")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> getClientsByDataInserimento(
             @RequestParam LocalDate dataInserimento,
             @RequestParam(defaultValue = "0") int page) {
@@ -106,6 +118,7 @@ public class ClienteController {
     }
 
     @GetMapping("/filtered-by-data-ultimo-contatto")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> getClientsByDataUltimoContatto(
             @RequestParam LocalDate dataUltimoContatto,
             @RequestParam(defaultValue = "0") int page) {
@@ -113,6 +126,7 @@ public class ClienteController {
     }
 
     @GetMapping("/filtered-by-nome-contatto")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> getClientsByNomeContatto(
             @RequestParam String nomeContatto,
             @RequestParam(defaultValue = "0") int page) {

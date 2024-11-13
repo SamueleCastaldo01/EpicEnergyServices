@@ -24,6 +24,7 @@ public class FatturaController {
     FatturaService fatturaService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Fattura> findALl(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -32,6 +33,7 @@ public class FatturaController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public Fattura save(@RequestBody @Validated FatturaDTO body, BindingResult validationResult, @AuthenticationPrincipal Utente currentAuthenticatedUser) {
         if (validationResult.hasErrors()) {
@@ -46,6 +48,7 @@ public class FatturaController {
     //l' eliminazione deve avvenire solamente per un organizzatore
     //con lo stesso id utente di chi lo ha creato
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findByIdAndDelete(@PathVariable long id, @AuthenticationPrincipal Utente currentAuthenticatedUser) {
         this.fatturaService.findByIdAndDelete(id, currentAuthenticatedUser);
@@ -53,16 +56,19 @@ public class FatturaController {
 
     //query richieste dalla traccia--------------------------------
     @GetMapping("/cliente/{clienteId}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Fattura> findByClienteId(@PathVariable Long clienteId) {
         return fatturaService.findByClienteId(clienteId);
     }
 
     @GetMapping("/stato-fattura/{statoFatturaId}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Fattura> findByStatoFatturaId(@PathVariable Long statoFatturaId) {
         return fatturaService.findByStatoId(statoFatturaId);
     }
 
     @GetMapping("/{clienteId}/range")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Fattura> findByDataRange(@PathVariable Long clienteId,
                                          @RequestParam LocalDate startDate,
                                          @RequestParam LocalDate endDate) {
@@ -70,11 +76,13 @@ public class FatturaController {
     }
 
     @GetMapping("/anno")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Fattura> findByAnno(@RequestParam int anno) {
         return fatturaService.findByAnno(anno);
     }
 
     @GetMapping("/importo-range")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Fattura> findByImportoRange(@RequestParam double importoMin,
                                             @RequestParam double importoMax) {
         return fatturaService.findByImportoRange(importoMin, importoMax);

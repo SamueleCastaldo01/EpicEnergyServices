@@ -19,16 +19,19 @@ public class StatoFatturaController {
     StatoFatturaService statoFatturaService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public List<StatoFattura> findAll() {
         return this.statoFatturaService.findAll();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public StatoFattura findById(@PathVariable long id) {
         return this.statoFatturaService.findById(id);
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public StatoFattura save(@RequestBody @Validated StatoFatturaDTO body, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
@@ -40,6 +43,7 @@ public class StatoFatturaController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public StatoFattura findByIdAndUpdate(@PathVariable long id, @RequestBody @Validated StatoFatturaDTO body, BindingResult validationResult) {
         if (validationResult.hasErrors()) {
             validationResult.getAllErrors().forEach(System.out::println);
@@ -50,6 +54,7 @@ public class StatoFatturaController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findByIdAndDelete(@PathVariable long id) {
         this.statoFatturaService.findByIdAndDelete(id);

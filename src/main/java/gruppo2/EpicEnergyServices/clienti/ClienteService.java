@@ -95,6 +95,11 @@ public class ClienteService {
             this.clienteRepository.delete(found);
     }
 
+    public Page<Cliente> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return clienteRepository.findAll(pageable);
+    }
+
 
     //vari ordinamenti: ordinamento---------------------
     public Page<Cliente> findAllSortedByNomeContatto(Pageable pageable) {
@@ -114,9 +119,9 @@ public class ClienteService {
     }
 
     //filtro fatturato -----------------------------
-    public Page<Cliente> findByFatturatoAnnualeBetween(BigDecimal minFatturato, BigDecimal maxFatturato) {
-        PageRequest pageRequest = PageRequest.of(0, 10); // page = 0 e size = 10
-        return clienteRepository.findByFatturatoAnnualeBetween(minFatturato, maxFatturato, pageRequest);
+    public Page<Cliente> findByFatturatoAnnualeBetween(BigDecimal minFatturato, BigDecimal maxFatturato, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return clienteRepository.findByFatturatoAnnualeBetween(minFatturato, maxFatturato, pageable);
     }
 
     //filtro data inserimento
@@ -149,5 +154,40 @@ public class ClienteService {
         List<Cliente> clientiFiltrati = clienteRepository.findByNomeContattoStartingWithIgnoreCase(nomeContatto);
         return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
     }
+
+
+    //find
+    public Page<Cliente> findFilteredClients(
+            BigDecimal minFatturato,
+            BigDecimal maxFatturato,
+            LocalDate dataInserimento,
+            LocalDate dataUltimoContatto,
+            String nomeContatto,
+            int page) {
+
+        Pageable pageable = PageRequest.of(Math.max(page, 0), 10);
+
+        if (minFatturato != null && maxFatturato != null) {
+            return clienteRepository.findByFatturatoAnnualeBetween(minFatturato, maxFatturato, pageable);
+        }
+
+        if (dataInserimento != null) {
+            List<Cliente> clientiFiltrati = clienteRepository.findByDataInserimento(dataInserimento);
+            return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
+        }
+
+        if (dataUltimoContatto != null) {
+            List<Cliente> clientiFiltrati = clienteRepository.findByDataUltimoContatto(dataUltimoContatto);
+            return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
+        }
+
+        if (nomeContatto != null && !nomeContatto.isEmpty()) {
+            List<Cliente> clientiFiltrati = clienteRepository.findByNomeContattoStartingWithIgnoreCase(nomeContatto);
+            return new PageImpl<>(clientiFiltrati, pageable, clientiFiltrati.size());
+        }
+
+        return clienteRepository.findAllByOrderByNomeContattoAsc(pageable);
+    }
+
 
 }

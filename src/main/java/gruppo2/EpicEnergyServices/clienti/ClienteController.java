@@ -5,6 +5,7 @@ package gruppo2.EpicEnergyServices.clienti;
 import gruppo2.EpicEnergyServices.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -73,64 +74,75 @@ public class ClienteController {
     }
 
 
-
     //ordinamento-------------------------------------
-    @GetMapping("/sorted-by-nome")
+    @GetMapping("/sorted")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getAllClientsSortedByNomeContatto(Pageable pageable) {
-        return clienteService.findAllSortedByNomeContatto(pageable);
-    }
-
-    @GetMapping("/sorted-by-fatturato")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getAllClientsSortedByFatturatoAnnuale(Pageable pageable) {
-        return clienteService.findAllSortedByFatturatoAnnuale(pageable);
-    }
-
-    @GetMapping("/sorted-by-data-inserimento")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getAllClientsSortedByDataInserimento(Pageable pageable) {
-        return clienteService.findAllSortedByFatturatoAnnuale(pageable);
-    }
-
-    @GetMapping("/sorted-by-data-ultimo-contatto")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getAllClientsSortedByDataContatto(Pageable pageable) {
-        return clienteService.findAllSortedByFatturatoAnnuale(pageable);
+    public Page<Cliente> getAllClientsSorted(@RequestParam String sortBy, Pageable pageable) {
+        switch (sortBy) {
+            case "nome":
+                return clienteService.findAllSortedByNomeContatto(pageable);
+            case "fatturato":
+                return clienteService.findAllSortedByFatturatoAnnuale(pageable);
+            case "data-inserimento":
+                return clienteService.findAllSortedByDataInserimento(pageable);
+            case "data-ultimo-contatto":
+                return clienteService.findAllSortedByDataUltimoContatto(pageable);
+            default:
+                throw new IllegalArgumentException("Ordinamento non valido: " + sortBy);
+        }
     }
 
     //vari filtri ------------------------------------------------------
     // fatturato
-    @GetMapping("/filtered-by-fatturato")
+    /*
+    @GetMapping("/filtered")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getClientsByFatturatoAnnuale(
-            @RequestParam BigDecimal minFatturato,
-            @RequestParam BigDecimal maxFatturato) {
-        return clienteService.findByFatturatoAnnualeBetween(minFatturato, maxFatturato);
+    public Page<Cliente> getFilteredClients(
+            @RequestParam(required = false) BigDecimal minFatturato,
+            @RequestParam(required = false) BigDecimal maxFatturato,
+            @RequestParam(required = false) LocalDate dataInserimento,
+            @RequestParam(required = false) LocalDate dataUltimoContatto,
+            @RequestParam(required = false) String nomeContatto,
+            @RequestParam(defaultValue = "0") int page) {
+
+        if (minFatturato != null && maxFatturato != null) {
+            return clienteService.findByFatturatoAnnualeBetween(minFatturato, maxFatturato, page);
+        }
+
+        if (dataInserimento != null) {
+            return clienteService.findByDataInserimento(dataInserimento, page);
+        }
+
+        if (dataUltimoContatto != null) {
+            return clienteService.findByDataUltimoContatto(dataUltimoContatto, page);
+        }
+
+        if (nomeContatto != null && !nomeContatto.isEmpty()) {
+            return clienteService.findByNomeContatto(nomeContatto, page);
+        }
+
+        return clienteService.findAll(page);
+    } */
+
+    @GetMapping("/filtered")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public Page<Cliente> getFilteredClients(
+            @RequestParam(required = false) BigDecimal minFatturato,
+            @RequestParam(required = false) BigDecimal maxFatturato,
+            @RequestParam(required = false) LocalDate dataInserimento,
+            @RequestParam(required = false) LocalDate dataUltimoContatto,
+            @RequestParam(required = false) String nomeContatto,
+            @RequestParam(defaultValue = "0") int page) {
+
+        return clienteService.findFilteredClients(
+                minFatturato,
+                maxFatturato,
+                dataInserimento,
+                dataUltimoContatto,
+                nomeContatto,
+                page
+        );
     }
 
-    @GetMapping("/filtered-by-data-inserimento")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getClientsByDataInserimento(
-            @RequestParam LocalDate dataInserimento,
-            @RequestParam(defaultValue = "0") int page) {
-        return clienteService.findByDataInserimento(dataInserimento, page);
-    }
-
-    @GetMapping("/filtered-by-data-ultimo-contatto")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getClientsByDataUltimoContatto(
-            @RequestParam LocalDate dataUltimoContatto,
-            @RequestParam(defaultValue = "0") int page) {
-        return clienteService.findByDataUltimoContatto(dataUltimoContatto, page);
-    }
-
-    @GetMapping("/filtered-by-nome-contatto")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getClientsByNomeContatto(
-            @RequestParam String nomeContatto,
-            @RequestParam(defaultValue = "0") int page) {
-        return clienteService.findByNomeContatto(nomeContatto, page);
-    }
 
 }

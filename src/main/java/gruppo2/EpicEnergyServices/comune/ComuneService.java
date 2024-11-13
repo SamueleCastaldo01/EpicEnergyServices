@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 
 @Service
 public class ComuneService {
@@ -20,6 +21,10 @@ public class ComuneService {
 
     @Autowired
     private ProvinciaRepository provinciaRepository;
+
+    public List<Comune> findAll() {
+        return this.comuneRepository.findAll();
+    }
 
     public void importCSV(Reader reader) {
         try (CSVReader csvReader = new CSVReaderBuilder(reader)

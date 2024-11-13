@@ -4,12 +4,14 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.exceptions.CsvValidationException;
+import gruppo2.EpicEnergyServices.comune.Comune;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -17,6 +19,10 @@ public class ProvinciaService {
 
     @Autowired
     private ProvinciaRepository provinciaRepository;
+
+    public List<Provincia> findAll() {
+        return this.provinciaRepository.findAll();
+    }
 
     public void importCSV(Reader reader) {
         try (CSVReader csvReader = new CSVReaderBuilder(reader)

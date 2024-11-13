@@ -2,6 +2,8 @@ package gruppo2.EpicEnergyServices.clienti;
 
 import gruppo2.EpicEnergyServices.indirizzo.Indirizzo;
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -11,8 +13,8 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
+    @Setter(AccessLevel.NONE)
+    private long id;
     private String ragioneSociale;
     private String partitaIva;
     private String email;
@@ -38,12 +40,36 @@ public class Cliente {
     @JoinColumn(name = "sede_operativa_id", referencedColumnName = "id")
     private Indirizzo sedeOperativa;
 
-    public Long getId() {
-        return id;
+    public Cliente() {}
+
+    public Cliente(String ragioneSociale, Indirizzo sedeOperativa,
+                   Indirizzo sedeLegale, TipoCliente tipoCliente,
+                   String logoAziendale, String telefonoContatto,
+                   String cognomeContatto, String nomeContatto,
+                   String telefono, String pec, String emailContatto,
+                   BigDecimal fatturatoAnnuale, LocalDate dataInserimento,
+                   LocalDate dataUltimoContatto, String email, String partitaIva) {
+
+        this.ragioneSociale = ragioneSociale;
+        this.sedeOperativa = sedeOperativa;
+        this.sedeLegale = sedeLegale;
+        this.tipoCliente = tipoCliente;
+        this.logoAziendale = logoAziendale;
+        this.telefonoContatto = telefonoContatto;
+        this.cognomeContatto = cognomeContatto;
+        this.nomeContatto = nomeContatto;
+        this.telefono = telefono;
+        this.pec = pec;
+        this.emailContatto = emailContatto;
+        this.fatturatoAnnuale = fatturatoAnnuale;
+        this.dataInserimento = dataInserimento;
+        this.dataUltimoContatto = dataUltimoContatto;
+        this.email = email;
+        this.partitaIva = partitaIva;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public long getId() {
+        return id;
     }
 
     public String getRagioneSociale() {
@@ -172,5 +198,28 @@ public class Cliente {
 
     public void setSedeOperativa(Indirizzo sedeOperativa) {
         this.sedeOperativa = sedeOperativa;
+    }
+
+    @Override
+    public String toString() {
+        return "Cliente{" +
+                "id=" + id +
+                ", ragioneSociale='" + ragioneSociale + '\'' +
+                ", partitaIva='" + partitaIva + '\'' +
+                ", email='" + email + '\'' +
+                ", dataInserimento=" + dataInserimento +
+                ", dataUltimoContatto=" + dataUltimoContatto +
+                ", fatturatoAnnuale=" + fatturatoAnnuale +
+                ", pec='" + pec + '\'' +
+                ", telefono='" + telefono + '\'' +
+                ", emailContatto='" + emailContatto + '\'' +
+                ", nomeContatto='" + nomeContatto + '\'' +
+                ", cognomeContatto='" + cognomeContatto + '\'' +
+                ", telefonoContatto='" + telefonoContatto + '\'' +
+                ", logoAziendale='" + logoAziendale + '\'' +
+                ", tipoCliente=" + tipoCliente +
+                ", sedeLegale=" + sedeLegale +
+                ", sedeOperativa=" + sedeOperativa +
+                '}';
     }
 }

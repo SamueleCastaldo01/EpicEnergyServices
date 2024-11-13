@@ -73,7 +73,6 @@ public class ClienteController {
     }
 
 
-
     //ordinamento-------------------------------------
     @GetMapping("/sorted")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
@@ -94,36 +93,33 @@ public class ClienteController {
 
     //vari filtri ------------------------------------------------------
     // fatturato
-    @GetMapping("/filtered-by-fatturato")
+    @GetMapping("/filtered")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getClientsByFatturatoAnnuale(
-            @RequestParam BigDecimal minFatturato,
-            @RequestParam BigDecimal maxFatturato) {
-        return clienteService.findByFatturatoAnnualeBetween(minFatturato, maxFatturato);
-    }
-
-    @GetMapping("/filtered-by-data-inserimento")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getClientsByDataInserimento(
-            @RequestParam LocalDate dataInserimento,
+    public Page<Cliente> getFilteredClients(
+            @RequestParam(required = false) BigDecimal minFatturato,
+            @RequestParam(required = false) BigDecimal maxFatturato,
+            @RequestParam(required = false) LocalDate dataInserimento,
+            @RequestParam(required = false) LocalDate dataUltimoContatto,
+            @RequestParam(required = false) String nomeContatto,
             @RequestParam(defaultValue = "0") int page) {
-        return clienteService.findByDataInserimento(dataInserimento, page);
-    }
 
-    @GetMapping("/filtered-by-data-ultimo-contatto")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getClientsByDataUltimoContatto(
-            @RequestParam LocalDate dataUltimoContatto,
-            @RequestParam(defaultValue = "0") int page) {
-        return clienteService.findByDataUltimoContatto(dataUltimoContatto, page);
-    }
+        if (minFatturato != null && maxFatturato != null) {
+            return clienteService.findByFatturatoAnnualeBetween(minFatturato, maxFatturato, page);
+        }
 
-    @GetMapping("/filtered-by-nome-contatto")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getClientsByNomeContatto(
-            @RequestParam String nomeContatto,
-            @RequestParam(defaultValue = "0") int page) {
-        return clienteService.findByNomeContatto(nomeContatto, page);
+        if (dataInserimento != null) {
+            return clienteService.findByDataInserimento(dataInserimento, page);
+        }
+
+        if (dataUltimoContatto != null) {
+            return clienteService.findByDataUltimoContatto(dataUltimoContatto, page);
+        }
+
+        if (nomeContatto != null && !nomeContatto.isEmpty()) {
+            return clienteService.findByNomeContatto(nomeContatto, page);
+        }
+
+        return clienteService.findAll(page);
     }
 
 }

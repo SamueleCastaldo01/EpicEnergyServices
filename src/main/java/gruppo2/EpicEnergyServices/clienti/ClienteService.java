@@ -95,6 +95,11 @@ public class ClienteService {
             this.clienteRepository.delete(found);
     }
 
+    public Page<Cliente> findAll(int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return clienteRepository.findAll(pageable);
+    }
+
 
     //vari ordinamenti: ordinamento---------------------
     public Page<Cliente> findAllSortedByNomeContatto(Pageable pageable) {
@@ -114,9 +119,9 @@ public class ClienteService {
     }
 
     //filtro fatturato -----------------------------
-    public Page<Cliente> findByFatturatoAnnualeBetween(BigDecimal minFatturato, BigDecimal maxFatturato) {
-        PageRequest pageRequest = PageRequest.of(0, 10); // page = 0 e size = 10
-        return clienteRepository.findByFatturatoAnnualeBetween(minFatturato, maxFatturato, pageRequest);
+    public Page<Cliente> findByFatturatoAnnualeBetween(BigDecimal minFatturato, BigDecimal maxFatturato, int page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return clienteRepository.findByFatturatoAnnualeBetween(minFatturato, maxFatturato, pageable);
     }
 
     //filtro data inserimento

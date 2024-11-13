@@ -88,6 +88,25 @@ public class FatturaController {
         return fatturaService.findByImportoRange(importoMin, importoMax);
     }
 
+
+    /*
+    @GetMapping("/fatture")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public Page<Fattura> findFatture(
+            @RequestParam(required = false) Long clienteId,
+            @RequestParam(required = false) Long statoFatturaId,
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false) LocalDate endDate,
+            @RequestParam(required = false) Integer anno,
+            @RequestParam(required = false) Double importoMin,
+            @RequestParam(required = false) Double importoMax,
+            @RequestParam(defaultValue = "0") int page) {
+
+        return fatturaService.findFatture(clienteId, statoFatturaId, startDate, endDate, anno, importoMin, importoMax, page);
+    }
+
+     */
+
 }
 
 

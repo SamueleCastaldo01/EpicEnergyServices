@@ -32,11 +32,11 @@ public class Cliente {
     @Enumerated(EnumType.STRING)
     private TipoCliente tipoCliente;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sede_legale_id", referencedColumnName = "id")
     private Indirizzo sedeLegale;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sede_operativa_id", referencedColumnName = "id")
     private Indirizzo sedeOperativa;
 

@@ -75,28 +75,21 @@ public class ClienteController {
 
 
     //ordinamento-------------------------------------
-    @GetMapping("/sorted-by-nome")
+    @GetMapping("/sorted")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getAllClientsSortedByNomeContatto(Pageable pageable) {
-        return clienteService.findAllSortedByNomeContatto(pageable);
-    }
-
-    @GetMapping("/sorted-by-fatturato")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getAllClientsSortedByFatturatoAnnuale(Pageable pageable) {
-        return clienteService.findAllSortedByFatturatoAnnuale(pageable);
-    }
-
-    @GetMapping("/sorted-by-data-inserimento")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getAllClientsSortedByDataInserimento(Pageable pageable) {
-        return clienteService.findAllSortedByFatturatoAnnuale(pageable);
-    }
-
-    @GetMapping("/sorted-by-data-ultimo-contatto")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> getAllClientsSortedByDataContatto(Pageable pageable) {
-        return clienteService.findAllSortedByFatturatoAnnuale(pageable);
+    public Page<Cliente> getAllClientsSorted(@RequestParam String sortBy, Pageable pageable) {
+        switch (sortBy) {
+            case "nome":
+                return clienteService.findAllSortedByNomeContatto(pageable);
+            case "fatturato":
+                return clienteService.findAllSortedByFatturatoAnnuale(pageable);
+            case "data-inserimento":
+                return clienteService.findAllSortedByDataInserimento(pageable);
+            case "data-ultimo-contatto":
+                return clienteService.findAllSortedByDataUltimoContatto(pageable);
+            default:
+                throw new IllegalArgumentException("Ordinamento non valido: " + sortBy);
+        }
     }
 
     //vari filtri ------------------------------------------------------

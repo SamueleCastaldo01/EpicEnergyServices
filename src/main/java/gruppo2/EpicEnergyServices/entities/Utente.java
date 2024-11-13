@@ -11,7 +11,7 @@ import java.util.List;
 
 @Entity
 @Table(name =  "utenti")
-@JsonIgnoreProperties({"password", "role", "accountNonLocked", "accountNonExpired", "credentialsNonExpired", "enabled", "authorities"})
+@JsonIgnoreProperties({"password","role",  "accountNonLocked", "accountNonExpired", "credentialsNonExpired", "enabled", "authorities"})
 public class Utente implements UserDetails {
     @Id
     @GeneratedValue

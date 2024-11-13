@@ -23,7 +23,6 @@ public class UtenteService {
     @Autowired
     private PasswordEncoder bcrypt;
 
-    // Aggiunge l'iniezione del bean Cloudinary
     @Autowired
     private Cloudinary cloudinaryUploader;
 

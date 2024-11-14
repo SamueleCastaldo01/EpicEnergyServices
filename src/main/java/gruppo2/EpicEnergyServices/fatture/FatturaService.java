@@ -84,6 +84,8 @@ public class FatturaService {
         try {
             Cliente cliente = clienteService.findClienteById(body.id_cliente());
             StatoFattura statoFattura = statoFatturaService.findById(body.id_stato_fattura());
+
+
             Fattura newFattura = new Fattura(cliente, body.data(), body.importo(), body.numero(), statoFattura, utente);
             return this.fatturaRepository.save(newFattura);
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package gruppo2.EpicEnergyServices.fatture.statoFatture;
 
+import gruppo2.EpicEnergyServices.exceptions.BadRequestException;
 import gruppo2.EpicEnergyServices.exceptions.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,9 +34,16 @@ public class StatoFatturaService {
 
     //POST --------------------------------------------
     public StatoFattura save(StatoFatturaDTO body) {
-        StatoFattura newStatoFattura = new StatoFattura(body.stato()) ;
+        this.statoFatturaRepository.findByStato(body.stato()).ifPresent(
+                fattura -> {
+                    throw new BadRequestException("Stato " + body.stato() + " già in uso!");
+                }
+        );
+        // Crea e salva il nuovo StatoFattura
+        StatoFattura newStatoFattura = new StatoFattura(body.stato());
         return this.statoFatturaRepository.save(newStatoFattura);
     }
+
 
     //PUT --------------------------------------------
     public StatoFattura findByIdAndUpdate(long id, StatoFatturaDTO body) {

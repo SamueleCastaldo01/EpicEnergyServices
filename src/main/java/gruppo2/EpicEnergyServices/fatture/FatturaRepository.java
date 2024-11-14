@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FatturaRepository extends JpaRepository<Fattura, Long> {
@@ -21,4 +22,6 @@ public interface FatturaRepository extends JpaRepository<Fattura, Long> {
 
     @Query("SELECT f FROM Fattura f WHERE YEAR(f.data) = :anno")
     Page<Fattura> findByAnno(@Param("anno") int anno, Pageable pageable);
+
+
 }

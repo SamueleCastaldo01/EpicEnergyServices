@@ -3,8 +3,9 @@ package gruppo2.EpicEnergyServices.clienti;
 
 import gruppo2.EpicEnergyServices.exceptions.BadRequestException;
 import gruppo2.EpicEnergyServices.exceptions.NotFoundException;
-import gruppo2.EpicEnergyServices.indirizzo.IndirizzoRepository;
 import gruppo2.EpicEnergyServices.indirizzo.IndirizzoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,9 @@ import java.util.List;
 
 @Service
 public class ClienteService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ClienteService.class);
+
 
     @Autowired
     private ClienteRepository clienteRepository;
@@ -30,13 +34,20 @@ public class ClienteService {
     }
 
     public Cliente findClienteById(long clienteId) {
-        return this.clienteRepository.findById(clienteId).orElseThrow(() -> new NotFoundException(clienteId));
+        return this.clienteRepository.findById(clienteId).orElseThrow(() ->
+        {
+            String message = "Cliente con ID" + clienteId + " non trovato!";
+            logger.error(message);
+            return new NotFoundException(message);
+        });
     }
 
     public Cliente save(NewClienteDTO body) {
         this.clienteRepository.findByEmail(body.email()).ifPresent(
                 cliente -> {
-                    throw new BadRequestException("Email" + body.email() + "giá in uso! inseriscine una nuova.");
+                    String message = "Email " + body.email() + " giá in uso! Inserisci una mail diversa.";
+                    logger.error(message);
+                    throw new BadRequestException(message);
                 }
         );
         Cliente newCLiente = new Cliente(
@@ -63,7 +74,8 @@ public class ClienteService {
     public Cliente findByIdAndUpdate(long clienteId, NewClienteDTO body) {
 
         Cliente found = this.findClienteById(clienteId);
-        if(found.getEmail().equals(body.email())) {
+        
+        if (found.getEmail().equals(body.email())) {
             this.clienteRepository.findByEmail(body.email()).ifPresent(
                     cliente -> {
                         throw new BadRequestException("Email" + body.email() + "giá in uso!");
@@ -90,9 +102,9 @@ public class ClienteService {
         return this.clienteRepository.save(found);
     }
 
-    public void findByIdAndDelete (long clienteId) {
-            Cliente found = this.findClienteById(clienteId);
-            this.clienteRepository.delete(found);
+    public void findByIdAndDelete(long clienteId) {
+        Cliente found = this.findClienteById(clienteId);
+        this.clienteRepository.delete(found);
     }
 
     public Page<Cliente> findAll(int page) {

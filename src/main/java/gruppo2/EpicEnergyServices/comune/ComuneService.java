@@ -30,6 +30,10 @@ public class ComuneService {
         }
     }
 
+    public List<Comune> trovaComuniPerProvincia(String nomeProvincia) {
+        return comuneRepository.findByProvincia_Provincia(nomeProvincia);
+    }
+
     public void importCSV(Reader reader) {
         try (CSVReader csvReader = new CSVReaderBuilder(reader)
                 .withCSVParser(new CSVParserBuilder().withSeparator(';').build())

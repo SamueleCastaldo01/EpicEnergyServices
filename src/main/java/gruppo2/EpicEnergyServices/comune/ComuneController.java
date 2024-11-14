@@ -26,6 +26,12 @@ public class ComuneController {
         }
     }
 
+    @GetMapping("/provincia")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public List<Comune> getComuniByProvincia(@RequestParam String nomeProvincia) {
+        return comuneService.trovaComuniPerProvincia(nomeProvincia);
+    }
+
     @PostMapping("/import-csv")
     @PreAuthorize("hasAuthority('ADMIN')")
     public String importCSV(@RequestParam("file") MultipartFile file) {

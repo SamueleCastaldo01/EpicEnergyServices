@@ -18,7 +18,12 @@ public class ComuneController {
     @GetMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public List<Comune> findAll() {
-        return this.comuneService.findAll();
+        try {
+            return this.comuneService.findAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Errore durante il recupero dei comuni: " + e.getMessage());
+        }
     }
 
     @PostMapping("/import-csv")

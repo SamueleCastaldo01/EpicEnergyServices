@@ -23,7 +23,11 @@ public class ComuneService {
     private ProvinciaRepository provinciaRepository;
 
     public List<Comune> findAll() {
-        return this.comuneRepository.findAll();
+        try {
+            return this.comuneRepository.findAll();
+        } catch (Exception e) {
+            throw new RuntimeException("Errore durante il recupero dei comuni: " + e.getMessage());
+        }
     }
 
     public void importCSV(Reader reader) {
@@ -35,15 +39,26 @@ public class ComuneService {
             csvReader.readNext();
 
             while ((line = csvReader.readNext()) != null) {
-                Provincia provincia = provinciaRepository.findByProvincia(line[3]);
-                Comune comune = new Comune();
-                comune.setComune(line[2]);
-                comune.setProvincia(provincia);
+                try {
+                    Provincia provincia = provinciaRepository.findByProvincia(line[3]);
+                    if (provincia == null) {
+                        throw new RuntimeException("Provincia non trovata per il comune: " + line[2]);
+                    }
+                    Comune comune = new Comune();
+                    comune.setComune(line[2]);
+                    comune.setProvincia(provincia);
 
-                comuneRepository.save(comune);
+                    comuneRepository.save(comune);
+                } catch (Exception e) {
+                    throw new RuntimeException("Errore durante l'importazione del comune: " + line[2] + " - " + e.getMessage());
+                }
             }
-        } catch (IOException | CsvValidationException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            throw new RuntimeException("Errore durante la lettura del file CSV: " + e.getMessage());
+        } catch (CsvValidationException e) {
+            throw new RuntimeException("Errore nella validazione del file CSV: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException("Errore durante l'importazione del file CSV: " + e.getMessage());
         }
     }
 }

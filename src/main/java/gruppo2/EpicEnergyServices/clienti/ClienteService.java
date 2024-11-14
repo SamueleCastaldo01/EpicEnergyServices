@@ -8,6 +8,7 @@ import gruppo2.EpicEnergyServices.indirizzo.IndirizzoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -29,8 +30,30 @@ public class ClienteService {
         return this.clienteRepository.findAll(pageable);
     }
 
+    public Page<Cliente> getAllClientsSorted(String sortBy, Pageable pageable) {
+        switch (sortBy.toLowerCase()) {
+            case "nomecontatto":
+                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("nomeContatto").ascending());
+                break;
+            case "fatturatoannuale":
+                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("fatturatoAnnuale").ascending());
+                break;
+            case "datainserimento":
+                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("dataInserimento").descending());
+                break;
+            case "dataultimocontatto":
+                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("dataUltimoContatto").descending());
+                break;
+            default:
+                pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by("nomeContatto").ascending());
+                break;
+        }
+        return clienteRepository.findAll(pageable);
+    }
+
     public Cliente findClienteById(long clienteId) {
-        return this.clienteRepository.findById(clienteId).orElseThrow(() -> new NotFoundException(clienteId));
+        return this.clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new NotFoundException(clienteId));
     }
 
     public Cliente save(NewClienteDTO body) {

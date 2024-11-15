@@ -23,7 +23,7 @@ public record NewClienteDTO(
         String logoAziendale,
 
         @NotBlank(message = "Il numero di telefono del contatto è obbligatorio")
-        @Pattern(regexp = "\\+?\\d{1,4}\\s?\\d{10}", message = "Il telefono deve essere un numero di 10 cifre")
+        @Pattern(regexp = "\\d{1,10}", message = "Il telefono deve essere un numero di 10 cifre")
         String telefonoContatto,
 
         @NotBlank(message = "Il cognome del contatto è obbligatorio")
@@ -33,7 +33,7 @@ public record NewClienteDTO(
         String nomeContatto,
 
         @NotBlank(message = "Il telefono è obbligatorio")
-        @Pattern(regexp = "\\+?\\d{1,4}\\s?\\d{10}", message = "Il telefono deve essere un numero di 10 cifre")
+        @Pattern(regexp = "\\d{1,10}", message = "Il telefono deve essere un numero di 10 cifre")
         String telefono,
 
         @NotBlank(message = "PEC è obbligatoria")

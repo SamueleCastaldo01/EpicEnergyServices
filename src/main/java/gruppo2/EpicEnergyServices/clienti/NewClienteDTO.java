@@ -7,7 +7,6 @@ import java.time.LocalDate;
 
 public record NewClienteDTO(
 
-        @NotBlank(message = "Ragione Sociale è obbligatoria")
         @Size(max = 100, message = "La Ragione Sociale non può superare i 100 caratteri")
         String ragioneSociale,
 
@@ -17,13 +16,11 @@ public record NewClienteDTO(
         @Positive(message = "L'id della sede legale deve essere positivo")
         long idSedeLegale,
 
-        @NotNull(message = "Tipo cliente è obbligatorio")
         TipoCliente tipoCliente,
 
         String logoAziendale,
 
-        @NotBlank(message = "Il numero di telefono del contatto è obbligatorio")
-        @Pattern(regexp = "\\d{1,10}", message = "Il telefono deve essere un numero di 10 cifre")
+        @Pattern(regexp = "\\d{1,10}", message = "Il telefono di contatto deve essere un numero di 10 cifre")
         String telefonoContatto,
 
         @NotBlank(message = "Il cognome del contatto è obbligatorio")
@@ -40,11 +37,9 @@ public record NewClienteDTO(
         @Email(message = "PEC non valida")
         String pec,
 
-        @NotBlank(message = "L'email di contatto è obbligatoria")
         @Email(message = "Email di contatto non valida")
         String emailContatto,
 
-        @NotNull(message = "Il fatturato annuale è obbligatorio")
         @Positive(message = "Il fatturato annuale deve essere maggiore di zero")
         BigDecimal fatturatoAnnuale,
 
@@ -60,7 +55,6 @@ public record NewClienteDTO(
         @Email(message = "Email non valida")
         String email,
 
-        @NotBlank(message = "La Partita IVA è obbligatoria")
         @Pattern(regexp = "^[0-9]{11}$", message = "La Partita IVA deve avere 11 numeri")
         String partitaIva
 ) {}

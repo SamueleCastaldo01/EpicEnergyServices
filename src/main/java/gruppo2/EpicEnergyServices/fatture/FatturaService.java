@@ -67,6 +67,18 @@ public class FatturaService {
         }
     }
 
+    //get by id Cliente
+    public Page<Fattura> findByClienteNome(String nomeContatto) {
+        try {
+            int page = 0;
+            int size = 10;
+            Pageable pageable = PageRequest.of(page, size);
+            return fatturaRepository.findByCliente_NomeContatto(nomeContatto, pageable);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante la ricerca delle fatture per cliente: " + e.getMessage());
+        }
+    }
+
     //get by id StatoFattura
     public Page<Fattura> findByStatoId(Long statoId) {
         try {
@@ -79,11 +91,24 @@ public class FatturaService {
         }
     }
 
+    public Page<Fattura> findByStatoNome(String stato) {
+        try {
+            int page = 0;
+            int size = 10;
+            Pageable pageable = PageRequest.of(page, size);
+            return fatturaRepository.findByStatoFattura_NomeStato(stato, pageable);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante la ricerca delle fatture per stato: " + e.getMessage());
+        }
+    }
+
     //POST --------------------------------------------
     public Fattura save(FatturaDTO body, Utente utente) {
         try {
             Cliente cliente = clienteService.findClienteById(body.id_cliente());
             StatoFattura statoFattura = statoFatturaService.findById(body.id_stato_fattura());
+
+
             Fattura newFattura = new Fattura(cliente, body.data(), body.importo(), body.numero(), statoFattura, utente);
             return this.fatturaRepository.save(newFattura);
         } catch (Exception e) {

@@ -36,73 +36,111 @@ public class FatturaService {
 
     //get all
     public Page<Fattura> findAll(int page, int size, String sortBy) {
-        if (size > 100) size = 100;
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return this.fatturaRepository.findAll(pageable);
+        try {
+            if (size > 100) size = 100;
+            Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+            return this.fatturaRepository.findAll(pageable);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante il recupero delle fatture: " + e.getMessage());
+        }
     }
 
     public Fattura findById(long id) {
-        return this.fatturaRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+        try {
+            return this.fatturaRepository.findById(id).orElseThrow(() -> new NotFoundException("Fattura con id " + id + " non trovata"));
+        } catch (NotFoundException e) {
+            throw e; // Rilancia l'eccezione NotFoundException
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante il recupero della fattura: " + e.getMessage());
+        }
     }
 
     //get by id Cliente
     public Page<Fattura> findByClienteId(Long clienteId) {
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        return fatturaRepository.findByClienteId(clienteId, pageable);
+        try {
+            int page = 0;
+            int size = 10;
+            Pageable pageable = PageRequest.of(page, size);
+            return fatturaRepository.findByClienteId(clienteId, pageable);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante la ricerca delle fatture per cliente: " + e.getMessage());
+        }
     }
 
     //get by id StatoFattura
     public Page<Fattura> findByStatoId(Long statoId) {
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        return fatturaRepository.findByStatoFatturaId(statoId, pageable);
+        try {
+            int page = 0;
+            int size = 10;
+            Pageable pageable = PageRequest.of(page, size);
+            return fatturaRepository.findByStatoFatturaId(statoId, pageable);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante la ricerca delle fatture per stato: " + e.getMessage());
+        }
     }
 
     //POST --------------------------------------------
     public Fattura save(FatturaDTO body, Utente utente) {
-        Cliente cliente = clienteService.findClienteById(body.id_cliente());
-        StatoFattura statoFattura = statoFatturaService.findById(body.id_stato_fattura());
-        Fattura newFattura = new Fattura(cliente, body.data(), body.importo(), body.numero(), statoFattura, utente);
-        return this.fatturaRepository.save(newFattura);
+        try {
+            Cliente cliente = clienteService.findClienteById(body.id_cliente());
+            StatoFattura statoFattura = statoFatturaService.findById(body.id_stato_fattura());
+            Fattura newFattura = new Fattura(cliente, body.data(), body.importo(), body.numero(), statoFattura, utente);
+            return this.fatturaRepository.save(newFattura);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante il salvataggio della fattura: " + e.getMessage());
+        }
     }
 
 
     //DELETE --------------------------------------------
     //l'eliminazione la può fare solamente l'utente che lo ha creato
     public void findByIdAndDelete(long id, Utente utente) {
-        Fattura found = this.findById(id);
-        if(found.getUtente().getId() != utente.getId())
-            throw new BadRequestException("NOn hai i permessi per eliminare questo evento");
-
-        this.fatturaRepository.delete(found);
+        try {
+            Fattura found = this.findById(id);
+            if (found.getUtente().getId() != utente.getId()) {
+                throw new BadRequestException("Non hai i permessi per eliminare questa fattura");
+            }
+            this.fatturaRepository.delete(found);
+        } catch (BadRequestException e) {
+            throw e; // Rilancia l'eccezione BadRequestException
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante l'eliminazione della fattura: " + e.getMessage());
+        }
     }
 
     //filter range data
     public Page<Fattura> findByDataRange(LocalDate startDate, LocalDate endDate) {
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        return fatturaRepository.findByDataBetween(startDate, endDate, pageable);
+        try {
+            int page = 0;
+            int size = 10;
+            Pageable pageable = PageRequest.of(page, size);
+            return fatturaRepository.findByDataBetween(startDate, endDate, pageable);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante la ricerca delle fatture per intervallo di date: " + e.getMessage());
+        }
     }
 
     //filter fattura in quell'anno
     public Page<Fattura> findByAnno(int anno) {
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        return fatturaRepository.findByAnno(anno, pageable);
+        try {
+            int page = 0;
+            int size = 10;
+            Pageable pageable = PageRequest.of(page, size);
+            return fatturaRepository.findByAnno(anno, pageable);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante la ricerca delle fatture per anno: " + e.getMessage());
+        }
     }
 
     //filter fattura range import
     public Page<Fattura> findByImportoRange(double importoMin, double importoMax) {
-        int page = 0;
-        int size = 10;
-        Pageable pageable = PageRequest.of(page, size);
-        return fatturaRepository.findByImportoBetween(importoMin, importoMax, pageable);
+        try {
+            int page = 0;
+            int size = 10;
+            Pageable pageable = PageRequest.of(page, size);
+            return fatturaRepository.findByImportoBetween(importoMin, importoMax, pageable);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante la ricerca delle fatture per intervallo di importo: " + e.getMessage());
+        }
     }
-
-
 }

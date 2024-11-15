@@ -28,18 +28,22 @@ public class ClienteController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Cliente> findALl(
+    public Page<Cliente> findAll(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy   ) {
-        return this.clienteService.findAll(page, size, sortBy);
+            @RequestParam(defaultValue = "id") String sortBy) {
+        try {
+            return this.clienteService.findAll(page, size, sortBy);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante il recupero dei clienti: " + e.getMessage());
+        }
     }
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente save(@RequestBody @Validated NewClienteDTO body, BindingResult validationResult) {
-        if(validationResult.hasErrors()) {
+        if (validationResult.hasErrors()) {
             String message = validationResult
                     .getAllErrors()
                     .stream()
@@ -47,13 +51,21 @@ public class ClienteController {
                     .collect(java.util.stream.Collectors.joining(". "));
             throw new BadRequestException("Ci sono stati errori nel payload! " + message);
         }
-        return this.clienteService.save(body);
+        try {
+            return this.clienteService.save(body);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante il salvataggio del cliente: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{clienteId}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Cliente findById(@PathVariable long clienteId) {
-        return this.clienteService.findClienteById(clienteId);
+        try {
+            return this.clienteService.findClienteById(clienteId);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante il recupero del cliente: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{clienteId}")
@@ -63,14 +75,22 @@ public class ClienteController {
             validationResult.getAllErrors().forEach(System.out::println);
             throw new BadRequestException("Ci sono stati errori nel payload!");
         }
-        return this.clienteService.findByIdAndUpdate(clienteId, body);
+        try {
+            return this.clienteService.findByIdAndUpdate(clienteId, body);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante l'aggiornamento del cliente: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{clienteId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void findByIdAndDelete(@PathVariable long clienteId) {
-        this.clienteService.findByIdAndDelete(clienteId);
+        try {
+            this.clienteService.findByIdAndDelete(clienteId);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante l'eliminazione del cliente: " + e.getMessage());
+        }
     }
 
 
@@ -78,17 +98,12 @@ public class ClienteController {
     @GetMapping("/sorted")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Cliente> getAllClientsSorted(@RequestParam String sortBy, Pageable pageable) {
-        switch (sortBy) {
-            case "nome":
-                return clienteService.findAllSortedByNomeContatto(pageable);
-            case "fatturato":
-                return clienteService.findAllSortedByFatturatoAnnuale(pageable);
-            case "data-inserimento":
-                return clienteService.findAllSortedByDataInserimento(pageable);
-            case "data-ultimo-contatto":
-                return clienteService.findAllSortedByDataUltimoContatto(pageable);
-            default:
-                throw new IllegalArgumentException("Ordinamento non valido: " + sortBy);
+        try {
+            return clienteService.getAllClientsSorted(sortBy, pageable);
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Ordinamento non valido: " + sortBy);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante l'ordinamento dei clienti: " + e.getMessage());
         }
     }
 
@@ -133,16 +148,17 @@ public class ClienteController {
             @RequestParam(required = false) LocalDate dataUltimoContatto,
             @RequestParam(required = false) String nomeContatto,
             @RequestParam(defaultValue = "0") int page) {
-
-        return clienteService.findFilteredClients(
-                minFatturato,
-                maxFatturato,
-                dataInserimento,
-                dataUltimoContatto,
-                nomeContatto,
-                page
-        );
+        try {
+            return clienteService.findFilteredClients(
+                    minFatturato,
+                    maxFatturato,
+                    dataInserimento,
+                    dataUltimoContatto,
+                    nomeContatto,
+                    page
+            );
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante il recupero dei clienti filtrati: " + e.getMessage());
+        }
     }
-
-
 }

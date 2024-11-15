@@ -85,6 +85,16 @@ public class FatturaController {
         }
     }
 
+    @GetMapping("/cliente/nomecontatto/{nomeContatto}")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public Page<Fattura> findByClienteNome(@PathVariable String nomeContatto) {
+        try {
+            return fatturaService.findByClienteNome(nomeContatto);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante la ricerca delle fatture per cliente: " + e.getMessage());
+        }
+    }
+
     @GetMapping("/stato-fattura/{statoFatturaId}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
     public Page<Fattura> findByStatoFatturaId(@PathVariable Long statoFatturaId) {
@@ -95,10 +105,19 @@ public class FatturaController {
         }
     }
 
-    @GetMapping("/{clienteId}/range")
+    @GetMapping("/stato-fattura/nomestato/{stato}")
     @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public Page<Fattura> findByDataRange(@PathVariable Long clienteId,
-                                         @RequestParam LocalDate startDate,
+    public Page<Fattura> findByStatoNome(@PathVariable String stato) {
+        try {
+            return fatturaService.findByStatoNome(stato);
+        } catch (Exception e) {
+            throw new BadRequestException("Errore durante la ricerca delle fatture per stato: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/range")
+    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
+    public Page<Fattura> findByDataRange(@RequestParam LocalDate startDate,
                                          @RequestParam LocalDate endDate) {
         try {
             return fatturaService.findByDataRange(startDate, endDate);

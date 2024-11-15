@@ -16,7 +16,9 @@ import java.util.Optional;
 @Repository
 public interface FatturaRepository extends JpaRepository<Fattura, Long> {
     Page<Fattura> findByClienteId(Long clienteId, Pageable pageable);
+    Page<Fattura> findByCliente_NomeContatto(String nomeContatto, Pageable pageable);
     Page<Fattura> findByStatoFatturaId(Long clienteId, Pageable pageable);
+    Page<Fattura> findByStatoFattura_NomeStato(String nomeStato, Pageable pageable);
     Page<Fattura> findByDataBetween(LocalDate startDate, LocalDate endDate, Pageable pageable);
     Page<Fattura> findByImportoBetween(double importoMin, double importoMax, Pageable pageable);
 
